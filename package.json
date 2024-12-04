@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack --experimental-https --experimental-https-key ./certificates/privatekey.pem --experimental-https-cert ./certificates/cert.pem",
     "build": "next build",
+    "generate": "prisma generate",
     "create:cert": "tsx ./seedCert.ts",
     "start": "next start",
     "lint": "next lint",
