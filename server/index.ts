@@ -1,3 +1,5 @@
-import { Hono } from "hono";
+import { app } from "@server/controller/controller";
 
-export default new Hono();
+app.basePath("/api");
+
+export default app;
