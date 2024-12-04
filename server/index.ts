@@ -1,9 +1,9 @@
 import { swaggerUI } from "@hono/swagger-ui";
 import { OpenAPIHono } from "@hono/zod-openapi";
-import { app } from "@server/controller/controller";
+import { appRouter } from "@server/controller/router";
 
 const serverApp = new OpenAPIHono().basePath("/api");
-serverApp.route("/", app);
+serverApp.route("/", appRouter);
 if (process.env.NODE_ENV !== "production") {
   serverApp.doc("/doc", {
     info: {
