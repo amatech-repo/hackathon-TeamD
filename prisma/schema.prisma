@@ -17,8 +17,15 @@ model User {
   sessions      Session[]
   Authenticator OAuthAccount[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  // Quiz-related fields
+  createdQuizSets QuizSet[]         @relation("CreatedQuizSets")
+  createdQuizzes  Quiz[]            @relation("CreatedQuizzes")
+  triedQuizzes    UserQuizAttempt[] @relation("TriedQuizzes")
+  userScores      UserScore[]
+
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  QuizModificationRequest QuizModificationRequest[]
 }
 
 model Session {
@@ -31,15 +38,155 @@ model Session {
   updatedAt DateTime @updatedAt
 }
 
-// Optional for WebAuthn support
 model OAuthAccount {
   userId            String
   providerId        String
-  providerAccountId String @unique
-  user              User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  providerAccountId String   @unique
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@id([providerId, providerAccountId])
+}
+
+model Tag {
+  id          String       @id @default(uuid())
+  name        String       @unique
+  quizSetTags QuizSetTag[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model QuizSetTag {
+  id        String   @id @default(uuid())
+  quizSetId String
+  tagId     String
+  quizSet   QuizSet  @relation(fields: [quizSetId], references: [id], onDelete: Cascade)
+  tag       Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([quizSetId, tagId])
+}
+
+model QuizSet {
+  id          String  @id @default(uuid())
+  title       String
+  description String?
+  level       Int     @default(1)
+  quizzes     Quiz[]
+  creator     User    @relation("CreatedQuizSets", fields: [creatorId], references: [id])
+  creatorId   String
+
+  isPublic Boolean @default(false)
+
+  quizSetTags QuizSetTag[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@id([providerId, providerAccountId])
+  @@index([level])
+  @@index([isPublic])
+  @@index([createdAt])
+}
+
+model Quiz {
+  id        String     @id @default(uuid())
+  questions Question[]
+  quizSetId String?
+  level     Int        @default(1)
+
+  creator   User   @relation("CreatedQuizzes", fields: [creatorId], references: [id])
+  creatorId String
+
+  quizSet QuizSet? @relation(fields: [quizSetId], references: [id])
+
+  attempts UserQuizAttempt[]
+
+  isPublic Boolean @default(false)
+
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  QuizModificationRequest QuizModificationRequest[]
+
+  @@index([level])
+  @@index([isPublic])
+  @@index([createdAt])
+  @@index([quizSetId])
+}
+
+model UserQuizAttempt {
+  id                 String        @id @default(uuid())
+  user               User          @relation("TriedQuizzes", fields: [userId], references: [id])
+  userId             String
+  quiz               Quiz          @relation(fields: [quizId], references: [id])
+  quizId             String
+  score              Int           @default(0)
+  completed          Boolean       @default(false)
+  lastAnswerOptionId String? // 最後に選んだ回答のID
+  lastAnswerOption   AnswerOption? @relation(fields: [lastAnswerOptionId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, quizId])
+}
+
+model UserScore {
+  id           String   @id @default(uuid())
+  user         User     @relation(fields: [userId], references: [id])
+  userId       String
+  totalScore   Int      @default(0)
+  totalQuizzes Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Question {
+  id        String   @id @default(uuid())
+  question  String
+  quiz      Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  quizId    String
+  answerId  String
+  answer    Answer?  @relation
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Answer {
+  id           String         @id @default(uuid())
+  questionId   String         @unique
+  type         String
+  correct      String
+  Question     Question       @relation(fields: [questionId], references: [id])
+  AnswerOption AnswerOption[]
+}
+
+model AnswerOption {
+  id              String            @id @default(uuid())
+  answerId        String
+  option          String
+  isCorrect       Boolean
+  Answer          Answer            @relation(fields: [answerId], references: [id])
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  UserQuizAttempt UserQuizAttempt[]
+}
+
+model QuizModificationRequest {
+  id             String   @id @default(uuid())
+  quizId         String
+  userId         String
+  requestType    String // 'question' または 'answer' など、修正タイプを記録
+  newQuestion    String? // 修正後の問題文 (null許容)
+  newTitle       String? // 修正後のタイトル (null許容)
+  newDescription String? // 修正後の説明 (null許容)
+  newAnswer      String? // 修正後の正解 (null許容)
+  newLevel       Int? // 修正後の難易度 (null許容)
+  status         String   @default("pending") // 'pending', 'approved', 'rejected' など
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  quiz Quiz @relation(fields: [quizId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 }
