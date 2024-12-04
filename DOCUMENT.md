@@ -3,7 +3,7 @@
 ## プロジェクトの起動
 
 **準備**
-discordとgoogleのoauthに必要なCLIENT_IDとCLIENT_SECRETをそれぞれ取得する
+discordとgoogleのoauthに必要な`CLIENT_ID`と`CLIENT_SECRET`をそれぞれ取得する
 
 **docker**での起動
 
@@ -169,44 +169,56 @@ src/                  # Nextjsの本体
 +-- utils/            # 日付の取得や、計算などのどこからでも再利用できるもの
 ```
 
+#### 細かいルール(Next)
+
+- `1ファイル1コンポーネント`
+- `utils`,`lib`,`types`,`config`など以外は、基本的に`export`,`default export`する関数などは`1つ`
+- `components/`と`app/`の`export`や`default export`する関数は全て`大文字`で始めること
+- `export`しない内部で使う関数はいくつ作っても良いが、再利用しやすいように、`utils`,`lib`,`features`などに配置できないか考える
+
 ### Hono側のルール
+
+[このディレクトリ構成](https://qiita.com/MotohiroSiobara/items/b672b22ce0505e5e17de)と[このアーキテクチャ](https://nrslib.com/adop/)を参考にしている
 
 ```sh
 server/
 |
-+-- index.ts          # サーバーの起動や他の場所からの呼び出しなどを行う場所
-|
-+-- infra/            # prismaへの直接のアクセスや直接のfetchなど、外部に最も依存する部分(classを使う)
-|   |
-|   +-- repository/   # dbへのアクセス
-|   |
-|   +-- cookie/       # cookieへのアクセス
-|   |
-|   +-- apis/         # apiへのアクセス
-|   |
-|   .
-|   .
-|   .
++-- config/           # 全体で使う変数や設定など ex) クイズの取得件数
 |
 +-- controller/       # リクエストを受け取る部分
-|
-+-- response/         # zodなどを使いレスポンスの型やレスポンスの定義をする
 |
 +-- domain/           # 一番アプリケーションの内側のデータの構造やinfraでの機能の定義
 |   |
 |   +-- entity/       # アプリケーション内で使うデータの型ともしかしたらクラスとかも
+|   |   |
+|   |   +-- ~.entity.ts
 |   |
 |   +-- interface/    # infraなどでどのような機能を持たせるかというinterfaceが入る
 |       |
 |       +-- ~.interface.ts
 |
++-- infra/            # prismaへの直接のアクセスや直接のfetchなど、外部に最も依存する部分(classを使う)
+|   |
+|   +-- client/       # client側でのアクセス(cookieやもしかしたらipなども)
+|   |   |
+|   |   +-- ~.client.ts
+|   |
+|   +-- repository/   # dbへのアクセス
+|   |   |
+|   |   +-- ~.repository.ts
+|   .
+|   .
+|   .
+|
++-- index.ts          # サーバーの起動や他の場所からの呼び出しなどを行う場所
+|
++-- response/         # zodなどを使いレスポンスの型やレスポンスの定義をする
+|
++-- testing/          # テストやモックなど
+|
 +-- usecase/          # アクター(ユーザー)からみた時の動き(ログインや、クイズの登録)
 |
 +-- utils/            # 日付の取得や、計算などのどこからでも再利用できるもの
-|
-+-- config/           # 全体で使う変数や設定など ex) クイズの取得件数
-|
-+-- testing/          # テストやモックなど
 ```
 
 #### それぞれの依存関係(Hono)
@@ -217,3 +229,61 @@ server/
 - `infra`が呼び出せる: どこからでも呼び出せるもの
 
 ※ **同階層のものは基本的にどこからでも呼び出せるもの以外は呼び出せない**
+
+#### Usecaseについて(Hono)
+
+usecaseでは、`exec`意外に関数を持たない
+
+```typescript
+export class ~UseCase{
+  constructor(
+    private readonly addId:IAddId = new AddId()
+  ){}
+  exec(id){
+    this.addId.checkId(id)
+    this.addId.setId(id)
+  }
+}
+```
+
+#### ファイルとクラスの命名(Hono)
+
+- `interface`の場合は、`~.interface.ts`とする `interface`での`~`は、これの拡張先のクラス(`infra/`以下)
+- `usecase/`以下のファイルは`~.usecase.ts`とする
+- `entity/`以下のフィアルは、`~.entity.ts`
+- `infra/`以下のファイルは、その中の親のフォルダの名前を使う
+
+  **(例)**
+
+  - `/infra/client/`の場合
+    ~.client.ts
+
+  - `/infra/repository`の場合、
+
+    ~.repository.ts
+
+  - また、これに伴い以下のインターフェースのファイルが作られうことになる
+
+    ```bash
+    ~.client.interface.ts
+    ~.repository.interface.ts
+    ```
+
+- ファイルの単語の区切りは`-`を使って、区切る
+
+  ```bash
+  session-cookie.client.interface.ts
+  login.usecase.ts
+  ```
+
+- クラス名やインスタンス名は先ほどのファイルと同じようにするが、インターフェースだけは、`I`から始めて、`~Interface`とはしない
+
+  ```typescript
+  export interface ISessionCookieClient{ ... }
+  ```
+
+  ```typescript
+  export class LoginUseCase{ ... }
+  ```
+
+- 関数などは複数配置する場合が多いと思うため、このルールは適応しなくて良い

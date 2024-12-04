@@ -1,5 +1,3 @@
-下記の見出しや文章は各自必要に応じて変更を行なってください
-
 ## [開発用ドキュメント](./DOCUMENT.md)
 
 # プロダクト名
@@ -38,4 +36,4 @@ TeamD XXXX
 使用技術を入力してください
 
 markdownの記法はこちらを参照してください↓
-https://docs.github.com/ja/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax
+<https://docs.github.com/ja/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax>

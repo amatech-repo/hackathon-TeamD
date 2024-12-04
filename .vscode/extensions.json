@@ -4,6 +4,7 @@
     "xabikos.javascriptsnippets",
     "esbenp.prettier-vscode",
     "mosapride.zenkaku",
-    "dsznajder.es7-react-js-snippets"
+    "dsznajder.es7-react-js-snippets",
+    "streetsidesoftware.code-spell-checker"
   ]
 }
