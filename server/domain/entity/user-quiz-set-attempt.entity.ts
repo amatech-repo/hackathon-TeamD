@@ -1,60 +1,50 @@
-type UserQuizAttemptEntityProps = {
+type UserQuizSetAttemptEntityProps = {
   id: string;
   userId: string;
-  quizId: string;
+  quizSetId: string;
+  lastCorrectQuizzesCount: number;
+  lastQuizzesScore: number;
   isCompleted: boolean;
-  lastSelectedAnswerOptionId?: string;
-  userQuizSetAttemptId?: string;
   createdAt: Date;
   updatedAt: Date;
 };
 
-export class UserQuizAttemptEntity {
-  private props: UserQuizAttemptEntityProps;
+export class UserQuizSetAttemptEntity {
+  private props: UserQuizSetAttemptEntityProps;
 
-  constructor(props: UserQuizAttemptEntityProps) {
+  constructor(props: UserQuizSetAttemptEntityProps) {
     this.props = props;
   }
 
-  static create(
-    props: Omit<UserQuizAttemptEntityProps, "createdAt" | "updatedAt">,
-  ) {
-    return new UserQuizAttemptEntity({
-      ...props,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
-  }
-
-  get id() {
+  get id(): string {
     return this.props.id;
   }
 
-  get userId() {
+  get userId(): string {
     return this.props.userId;
   }
 
-  get quizId() {
-    return this.props.quizId;
+  get quizSetId(): string {
+    return this.props.quizSetId;
   }
 
-  get isCompleted() {
+  get lastCorrectQuizzesCount(): number {
+    return this.props.lastCorrectQuizzesCount;
+  }
+
+  get lastQuizzesScore(): number {
+    return this.props.lastQuizzesScore;
+  }
+
+  get isCompleted(): boolean {
     return this.props.isCompleted;
   }
 
-  get lastSelectedAnswerOptionId() {
-    return this.props.lastSelectedAnswerOptionId;
-  }
-
-  get userQuizSetAttemptId() {
-    return this.props.userQuizSetAttemptId;
-  }
-
-  get createdAt() {
+  get createdAt(): Date {
     return this.props.createdAt;
   }
 
-  get updatedAt() {
+  get updatedAt(): Date {
     return this.props.updatedAt;
   }
 }

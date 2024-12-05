@@ -1,45 +1,27 @@
-type OAuthAccountEntityProps = {
-  userId: string;
-  providerId: string;
-  providerAccountId: string;
+type TagEntityProps = {
+  id: string;
+  name: string;
   createdAt: Date;
   updatedAt: Date;
 };
 
-export class OAuthAccountEntity {
-  private props: OAuthAccountEntityProps;
+export class TagEntity {
+  private props: TagEntityProps;
 
-  constructor(props: OAuthAccountEntityProps) {
+  constructor(props: TagEntityProps) {
     this.props = props;
   }
 
-  static create(
-    props: Omit<OAuthAccountEntityProps, "createdAt" | "updatedAt">,
-  ) {
-    return new OAuthAccountEntity({
-      ...props,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
+  get id(): string {
+    return this.props.id;
   }
-
-  get userId() {
-    return this.props.userId;
+  get name(): string {
+    return this.props.name;
   }
-
-  get providerId() {
-    return this.props.providerId;
-  }
-
-  get providerAccountId() {
-    return this.props.providerAccountId;
-  }
-
-  get createdAt() {
+  get createdAt(): Date {
     return this.props.createdAt;
   }
-
-  get updatedAt() {
+  get updatedAt(): Date {
     return this.props.updatedAt;
   }
 }
