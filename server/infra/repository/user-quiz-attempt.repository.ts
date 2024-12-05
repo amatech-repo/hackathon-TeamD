@@ -1,8 +1,8 @@
 import { IUserQuizAttemptRepository } from "@server/domain/interface/repository/user-quiz-attempt.repository.interface";
 import { DBAbstract } from "./db.abstract.repository";
-import { UserQuizAttemptEntity } from "@server/domain/entity/user-quiz-attemp.entity";
 import { PrismaClient, UserQuizAttempt } from "@prisma/client";
 import { HTTPException } from "hono/http-exception";
+import { UserQuizAttemptEntity } from "@server/domain/entity/user-quiz-attempt.entity";
 
 export class UserQuizAttemptRepository
   extends DBAbstract

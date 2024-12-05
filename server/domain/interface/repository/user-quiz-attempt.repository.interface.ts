@@ -1,4 +1,4 @@
-import { UserQuizAttemptEntity } from "@server/domain/entity/user-quiz-attemp.entity";
+import { UserQuizAttemptEntity } from "@server/domain/entity/user-quiz-attempt.entity";
 import { IDbAbstract } from "./db.abstract.interface";
 
 export interface IUserQuizAttemptRepository extends IDbAbstract {
