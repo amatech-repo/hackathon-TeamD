@@ -92,7 +92,6 @@ export class SessionStoreRepository
     try {
       if (!this.prisma || !(this.prisma instanceof PrismaClient)) {
         console.error("prisma is null or not instance of PrismaClient");
-
         throw new HTTPException(500, {
           message: "Internal Server Error ",
         });

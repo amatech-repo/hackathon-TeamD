@@ -19,4 +19,5 @@ export interface IUserRepository extends IDbAbstract {
     userId: string;
     name: string;
   }): Promise<UserEntity>;
+  deleteUser(userId: string): Promise<void>;
 }
