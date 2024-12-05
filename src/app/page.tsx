@@ -21,6 +21,12 @@ export default function Home() {
         <div>
           <Link href="/logout">ログアウトページへ</Link>
         </div>
+        <div>
+          <Link href="/me">マイページへ</Link>
+        </div>
+        <div>
+          <Link href="/users">ユーザー一覧</Link>
+        </div>
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
         フッター

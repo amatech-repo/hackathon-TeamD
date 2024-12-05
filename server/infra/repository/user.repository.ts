@@ -102,7 +102,6 @@ export class UserRepository extends DBAbstract implements IUserRepository {
       });
     }
   }
-
   async updateUser({
     userId,
     name,
@@ -126,6 +125,25 @@ export class UserRepository extends DBAbstract implements IUserRepository {
           },
         }),
       );
+    } catch (e) {
+      console.error(e);
+      throw new HTTPException(500, {
+        message: "Internal Server Error ",
+      });
+    }
+  }
+  async deleteUser(userId: string): Promise<void> {
+    try {
+      if (!this.prisma) {
+        throw new HTTPException(500, {
+          message: "Internal Server Error ",
+        });
+      }
+      await this.prisma.user.delete({
+        where: {
+          id: userId,
+        },
+      });
     } catch (e) {
       console.error(e);
       throw new HTTPException(500, {

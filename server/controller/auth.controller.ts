@@ -3,13 +3,13 @@ import { googleAuth } from "@hono/oauth-providers/google";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { OAUTH_PROVIDERS } from "@server/config/config";
 import { getDiscordEmail } from "@server/libs/discord-email";
-import { IsValidSessionUseCase } from "@server/usecase/is-valid-session.usecase";
-import { loginWithProviderUseCase } from "@server/usecase/login-with-oauth.usecase";
-import { LogoutUseCase } from "@server/usecase/logout.usecase";
+import { IsUserLogin } from "@server/usecase/auth/is-user-login.usecase";
+import { loginWithProviderUseCase } from "@server/usecase/auth/login-with-oauth.usecase";
+import { LogoutUseCase } from "@server/usecase/auth/logout.usecase";
 
 export const authController = new OpenAPIHono();
 authController.get("/login/*", async (c, next) => {
-  if (await IsValidSessionUseCase(c)) {
+  if (await IsUserLogin(c)) {
     return c.redirect("/");
   }
   return next();
@@ -63,11 +63,10 @@ authController.get("/login/discord", async (c) => {
   return c.redirect("/");
 });
 authController.get("/status", async (c) => {
-  const isValid = await IsValidSessionUseCase(c);
+  const isValid = await IsUserLogin(c);
   return c.json({ isValid });
 });
-
-authController.get("/logout", (c) => {
-  LogoutUseCase(c);
+authController.get("/logout", async (c) => {
+  await LogoutUseCase(c);
   return c.redirect("/login");
 });

@@ -4,25 +4,15 @@ import { SessionCookieClient } from "@server/infra/client/session-cookie.client"
 import { SessionStoreRepository } from "@server/infra/repository/session-store.repository";
 import type { Context } from "hono";
 
-export async function IsValidSessionUseCase(c: Context): Promise<boolean> {
+export async function GetUserIdUseCase(c: Context): Promise<string | null> {
   const sessionCookieClient: ISessionCookieClient = new SessionCookieClient();
   const sessionStoreRepository: ISessionStoreRepository =
     new SessionStoreRepository();
-
   await sessionStoreRepository.initPrisma(c);
-
   const sessionId = sessionCookieClient.getSessionCookie(c);
   if (!sessionId) {
-    return false;
+    return null;
   }
-
-  const isExistSession = await sessionStoreRepository.isExistSession(sessionId);
-  if (!isExistSession) {
-    return false;
-  }
-
-  sessionCookieClient.updateSessionExpires({ sessionId, c });
-  await sessionStoreRepository.updateSessionExpires(sessionId);
-
-  return true;
+  const userId = await sessionStoreRepository.getUserIdBySession(sessionId);
+  return userId;
 }
