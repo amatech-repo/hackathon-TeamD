@@ -22,7 +22,7 @@ export class UserRepository extends DBAbstract implements IUserRepository {
           message: "Internal Server Error ",
         });
       }
-      return this.toEntity(
+      return UserRepository.toEntity(
         await this.prisma.user.create({
           data: {
             email,
@@ -46,7 +46,7 @@ export class UserRepository extends DBAbstract implements IUserRepository {
         });
       }
       return (await this.prisma.user.findMany()).map((user) =>
-        this.toEntity(user),
+        UserRepository.toEntity(user),
       );
     } catch (e) {
       console.error(e);
@@ -71,7 +71,7 @@ export class UserRepository extends DBAbstract implements IUserRepository {
       if (!user) {
         return null;
       }
-      return this.toEntity(user);
+      return UserRepository.toEntity(user);
     } catch (e) {
       console.error(e);
       throw new HTTPException(500, {
@@ -94,7 +94,7 @@ export class UserRepository extends DBAbstract implements IUserRepository {
       if (!user) {
         return null;
       }
-      return this.toEntity(user);
+      return UserRepository.toEntity(user);
     } catch (e) {
       console.error(e);
       throw new HTTPException(500, {
@@ -115,7 +115,7 @@ export class UserRepository extends DBAbstract implements IUserRepository {
           message: "Internal Server Error ",
         });
       }
-      return this.toEntity(
+      return UserRepository.toEntity(
         await this.prisma.user.update({
           where: {
             id: userId,
@@ -152,7 +152,7 @@ export class UserRepository extends DBAbstract implements IUserRepository {
     }
   }
 
-  private toEntity(user: User): UserEntity {
+  static toEntity(user: User): UserEntity {
     return new UserEntity({
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,

@@ -6,12 +6,12 @@ export function userGuard(): MiddlewareHandler {
   return async (c, next) => {
     const userId = await GetUserIdUseCase(c);
     if (!userId) {
-      c.set("usr_id", undefined);
+      c.set("user_id", undefined);
       throw new HTTPException(401, {
         message: "Unauthorized",
       });
     }
-    c.set("usr_id", userId);
+    c.set("user_id", userId);
     await next();
   };
 }
@@ -19,6 +19,6 @@ export function userGuard(): MiddlewareHandler {
 declare module "hono" {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   interface ContextVariableMap {
-    usr_id: Partial<string> | undefined;
+    user_id: Partial<string> | undefined;
   }
 }

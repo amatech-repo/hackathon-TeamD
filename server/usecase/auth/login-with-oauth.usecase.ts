@@ -1,12 +1,14 @@
 import type { Context } from "hono";
 import type { IOAuthAccountRepository } from "@server/domain/interface/repository/oauth-account.repository.interface";
-import { OAuthAccountRepository } from "@server/infra/repository/oauth-account.repository.interface";
+import { OAuthAccountRepository } from "@server/infra/repository/oauth-account.repository";
 import type { ISessionCookieClient } from "@server/domain/interface/client/session-cookie.client.interface";
 import { SessionCookieClient } from "@server/infra/client/session-cookie.client";
 import { SessionStoreRepository } from "@server/infra/repository/session-store.repository";
 import type { ISessionStoreRepository } from "@server/domain/interface/repository/session-store.repository.interface";
 import type { IUserRepository } from "@server/domain/interface/repository/user.repository.interface";
 import { UserRepository } from "@server/infra/repository/user.repository";
+import { IUserScoreRepository } from "@server/domain/interface/repository/user-score.repository.interface";
+import { UserScoreRepository } from "@server/infra/repository/user-score.repository";
 
 export async function loginWithProviderUseCase({
   email,
@@ -27,10 +29,12 @@ export async function loginWithProviderUseCase({
   const sessionStoreRepository: ISessionStoreRepository =
     new SessionStoreRepository();
   const userRepository: IUserRepository = new UserRepository();
+  const userScoreRepository: IUserScoreRepository = new UserScoreRepository();
 
   await oauthAccountRepository.initPrisma(c);
   await sessionStoreRepository.initPrisma(c);
   await userRepository.initPrisma(c);
+  await userScoreRepository.initPrisma(c);
 
   if (!providerUserId || !email || !name) {
     throw new Error("Invalid parameter");
@@ -49,6 +53,9 @@ export async function loginWithProviderUseCase({
   if (!userId) {
     const user = await userRepository.createUser({ email, name });
     userId = user.id;
+
+    // ユーザーの作成(スコアなど)
+    await userScoreRepository.createUserScore({ userId });
   }
 
   // OAuthアカウントが存在しない場合は作成
