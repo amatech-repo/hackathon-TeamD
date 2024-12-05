@@ -19,14 +19,16 @@ model User {
   oauthAccount OAuthAccount[]
 
   // Quiz-related fields
-  createdQuizSets QuizSet[]         @relation("CreatedQuizSets")
-  createdQuizzes  Quiz[]            @relation("CreatedQuizzes")
-  triedQuizzes    UserQuizAttempt[] @relation("TriedQuizzes")
-  userScores      UserScore[]
-
-  createdAt                 DateTime           @default(now())
-  updatedAt                 DateTime           @updatedAt
+  createdQuizSets           QuizSet[]            @relation("CreatedQuizSets")
+  createdQuizzes            Quiz[]               @relation("CreatedQuizzes")
+  userLastQuizAttempt       UserQuizAttempt[]    @relation("UserQuizAttempts")
+  userLastQuizSetAttempt    UserQuizSetAttempt[] @relation("UserQuizSetAttempts")
   proposedQuizModifications QuizModification[]
+
+  userScores UserScore[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // セッション
@@ -87,7 +89,8 @@ model QuizSet {
 
   isPublic Boolean @default(false)
 
-  quizSetTag QuizSetTag[]
+  quizSetTag     QuizSetTag[]
+  quizSetAttempt UserQuizSetAttempt[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -109,7 +112,7 @@ model Quiz {
 
   quizSet QuizSet? @relation(fields: [quizSetId], references: [id])
 
-  attempts UserQuizAttempt[]
+  quizAttempts UserQuizAttempt[]
 
   isPublic Boolean @default(false)
 
@@ -125,21 +128,40 @@ model Quiz {
 
 // ユーザーがクイズに挑戦した記録
 model UserQuizAttempt {
-  id                         String        @id @default(uuid())
-  user                       User          @relation("TriedQuizzes", fields: [userId], references: [id], onDelete: Cascade)
+  id                         String              @id @default(uuid())
+  user                       User                @relation("UserQuizAttempts", fields: [userId], references: [id], onDelete: Cascade)
   userId                     String
-  quiz                       Quiz          @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  quiz                       Quiz                @relation(fields: [quizId], references: [id], onDelete: Cascade)
   quizId                     String
-  score                      Int           @default(0)
-  isCompleted                Boolean       @default(false)
+  isCompleted                Boolean             @default(false)
   lastSelectedAnswerOptionId String? // 最後に選んだ回答のID
-  lastSelectedAnswerOption   AnswerOption? @relation(fields: [lastSelectedAnswerOptionId], references: [id], onDelete: SetNull)
+  lastSelectedAnswerOption   AnswerOption?       @relation(fields: [lastSelectedAnswerOptionId], references: [id], onDelete: SetNull)
+  UserQuizSetAttempt         UserQuizSetAttempt? @relation(fields: [userQuizSetAttemptId], references: [id])
+  userQuizSetAttemptId       String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([userId, quizId])
-  @@index([score, isCompleted])
+  @@index([isCompleted, userQuizSetAttemptId])
+}
+
+model UserQuizSetAttempt {
+  id                      String            @id @default(uuid())
+  user                    User              @relation("UserQuizSetAttempts", fields: [userId], references: [id], onDelete: Cascade)
+  userId                  String
+  quizSet                 QuizSet           @relation(fields: [quizSetId], references: [id], onDelete: Cascade)
+  quizSetId               String
+  lastCorrectQuizzesCount Int               @default(0) // 正解数
+  lastQuizzesScore        Int               @default(0) // スコア
+  isCompleted             Boolean           @default(false)
+  lastUserQuizAttempt     UserQuizAttempt[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, quizSetId])
+  @@index([isCompleted, userId, quizSetId])
 }
 
 // ユーザーのスコアなどの情報
@@ -147,8 +169,12 @@ model UserScore {
   id           String   @id @default(uuid())
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       String
-  totalScore   Int      @default(0)
+  // クイズ正当数
+  totalCorrect Int      @default(0)
+  // クイズ挑戦数
   totalQuizzes Int      @default(0)
+  // スコア
+  totalScore   Int      @default(0)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }

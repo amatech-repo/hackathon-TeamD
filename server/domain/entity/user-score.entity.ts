@@ -1,8 +1,9 @@
 type UserScoreEntityProps = {
   id: string;
   userId: string;
-  totalScore: number;
+  totalCorrect: number;
   totalQuizzes: number;
+  totalScore: number;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -32,6 +33,10 @@ export class UserScoreEntity {
 
   get totalScore() {
     return this.props.totalScore;
+  }
+
+  get totalCorrect() {
+    return this.props.totalCorrect;
   }
 
   get totalQuizzes() {

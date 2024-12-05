@@ -1,6 +1,5 @@
 import { createRoute } from "@hono/zod-openapi";
 import { QuizzesDto } from "../dto/quizzes.dto";
-import { json } from "stream/consumers";
 
 export const quizzesRecipeGet = createRoute({
   method: "get",
