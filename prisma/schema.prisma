@@ -75,6 +75,7 @@ model QuizSetTag {
   updatedAt DateTime @updatedAt
 
   @@unique([quizSetId, tagId])
+  @@index([quizSetId, tagId])
 }
 
 // クイズセット クイズの集合体
@@ -98,6 +99,8 @@ model QuizSet {
   @@index([level])
   @@index([isPublic])
   @@index([createdAt])
+  @@index([creatorId])
+  @@index([creatorId, level, isPublic])
 }
 
 // クイズ本体 クイズセットから呼び出すことも、独立して呼び出すこともできる
@@ -124,6 +127,9 @@ model Quiz {
   @@index([isPublic])
   @@index([createdAt])
   @@index([quizSetId])
+  @@index([creatorId])
+  @@index([level, isPublic])
+  @@index([creatorId, level, isPublic])
 }
 
 // ユーザーがクイズに挑戦した記録
@@ -143,7 +149,8 @@ model UserQuizAttempt {
   updatedAt DateTime @updatedAt
 
   @@unique([userId, quizId])
-  @@index([isCompleted, userQuizSetAttemptId])
+  @@index([userId, quizId, isCompleted])
+  @@index([userQuizSetAttemptId, isCompleted])
 }
 
 model UserQuizSetAttempt {
@@ -195,9 +202,8 @@ model Question {
 
 // 回答
 model Answer {
-  id      String @id @default(uuid())
-  type    String
-  correct String
+  id   String @id @default(uuid())
+  type String
 
   // 中間テーブルを介して問題と関連付け
   questionAnswers QuestionAnswer[]
@@ -207,14 +213,15 @@ model Answer {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([type])
 }
 
 // 問題と回答の中間テーブル
 model QuestionAnswer {
-  id         String  @id @default(uuid())
+  id         String @id @default(uuid())
   questionId String
   answerId   String
-  isCorrect  Boolean @default(false)
 
   question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
   answer   Answer   @relation(fields: [answerId], references: [id], onDelete: Cascade)
@@ -226,12 +233,15 @@ model QuestionAnswer {
 model AnswerOption {
   id              String            @id @default(uuid())
   answerId        String
-  option          String
-  isCorrect       Boolean
+  option          String // 選択肢の内容
+  isCorrect       Boolean // 正解かどうか
   answer          Answer            @relation(fields: [answerId], references: [id], onDelete: Cascade)
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   userQuizAttempt UserQuizAttempt[]
+
+  @@index([answerId])
+  @@index([answerId, isCorrect])
 }
 
 model QuizModification {
@@ -252,4 +262,6 @@ model QuizModification {
   user User @relation(fields: [userId], references: [id])
 
   @@index([status])
+  @@index([quizId])
+  @@index([quizId, status])
 }

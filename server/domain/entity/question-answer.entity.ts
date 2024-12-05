@@ -2,7 +2,6 @@ type QuestionAnswerEntityProps = {
   id: string;
   questionId: string;
   answerId: string;
-  isCorrect: boolean;
 };
 
 export class QuestionAnswerEntity {
@@ -26,9 +25,5 @@ export class QuestionAnswerEntity {
 
   get answerId() {
     return this.props.answerId;
-  }
-
-  get isCorrect() {
-    return this.props.isCorrect;
   }
 }

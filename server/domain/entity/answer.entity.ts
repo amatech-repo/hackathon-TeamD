@@ -1,7 +1,6 @@
 type AnswerEntityProps = {
   id: string;
   type: string;
-  correct: string;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -27,10 +26,6 @@ export class AnswerEntity {
 
   get type() {
     return this.props.type;
-  }
-
-  get correct() {
-    return this.props.correct;
   }
 
   get createdAt() {

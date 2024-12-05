@@ -1,60 +1,43 @@
-type UserQuizAttemptEntityProps = {
+type UserQuizSetAttemptEntityProps = {
   id: string;
-  userId: string;
-  quizId: string;
-  isCompleted: boolean;
-  lastSelectedAnswerOptionId?: string;
-  userQuizSetAttemptId?: string;
+  title: string;
+  description?: string;
+  level: number;
+  creatorId: string;
+  isPublic: boolean;
   createdAt: Date;
   updatedAt: Date;
 };
 
-export class UserQuizAttemptEntity {
-  private props: UserQuizAttemptEntityProps;
+export class UserQuizSetAttemptEntity {
+  private props: UserQuizSetAttemptEntityProps;
 
-  constructor(props: UserQuizAttemptEntityProps) {
+  constructor(props: UserQuizSetAttemptEntityProps) {
     this.props = props;
   }
 
-  static create(
-    props: Omit<UserQuizAttemptEntityProps, "createdAt" | "updatedAt">,
-  ) {
-    return new UserQuizAttemptEntity({
-      ...props,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
-  }
-
-  get id() {
+  get id(): string {
     return this.props.id;
   }
-
-  get userId() {
-    return this.props.userId;
+  get title(): string {
+    return this.props.title;
   }
-
-  get quizId() {
-    return this.props.quizId;
+  get description(): string | undefined {
+    return this.props.description;
   }
-
-  get isCompleted() {
-    return this.props.isCompleted;
+  get level(): number {
+    return this.props.level;
   }
-
-  get lastSelectedAnswerOptionId() {
-    return this.props.lastSelectedAnswerOptionId;
+  get creatorId(): string {
+    return this.props.creatorId;
   }
-
-  get userQuizSetAttemptId() {
-    return this.props.userQuizSetAttemptId;
+  get isPublic(): boolean {
+    return this.props.isPublic;
   }
-
-  get createdAt() {
+  get createdAt(): Date {
     return this.props.createdAt;
   }
-
-  get updatedAt() {
+  get updatedAt(): Date {
     return this.props.updatedAt;
   }
 }
