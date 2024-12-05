@@ -6,14 +6,23 @@ import { getDiscordEmail } from "@server/libs/discord-email";
 import { IsUserLogin } from "@server/usecase/auth/is-user-login.usecase";
 import { loginWithProviderUseCase } from "@server/usecase/auth/login-with-oauth.usecase";
 import { LogoutUseCase } from "@server/usecase/auth/logout.usecase";
+import {
+  authRecipeLoginDiscordGet,
+  authRecipeLoginGoogleGet,
+  authRecipeLogoutGet,
+  authRecipeStatusGet,
+} from "./recipe/auth.recipe";
+import { AuthDto } from "./dto/auth.dto";
 
 export const authController = new OpenAPIHono();
-authController.get("/login/*", async (c, next) => {
+
+authController.use("/login/*", async (c, next) => {
   if (await IsUserLogin(c)) {
     return c.redirect("/");
   }
   return next();
 });
+
 authController.use(
   "/login/google",
   googleAuth({
@@ -27,7 +36,8 @@ authController.use(
   }),
 );
 authController.use("/login/discord", getDiscordEmail());
-authController.get("/login/google", async (c) => {
+
+authController.openapi(authRecipeLoginGoogleGet, async (c) => {
   const user = c.get("user-google");
   if (!user || !user.email || !user.id || !user.name) {
     return c.json({
@@ -44,7 +54,7 @@ authController.get("/login/google", async (c) => {
   });
   return c.redirect("/");
 });
-authController.get("/login/discord", async (c) => {
+authController.openapi(authRecipeLoginDiscordGet, async (c) => {
   const user = c.get("user-discord");
   const email = c.get("discord-email");
   if (!user || !email || !user.id || !user.username) {
@@ -62,11 +72,11 @@ authController.get("/login/discord", async (c) => {
   });
   return c.redirect("/");
 });
-authController.get("/status", async (c) => {
+authController.openapi(authRecipeStatusGet, async (c) => {
   const isValid = await IsUserLogin(c);
-  return c.json({ isValid });
+  return c.json(AuthDto.entityToDto({ isValid }));
 });
-authController.get("/logout", async (c) => {
+authController.openapi(authRecipeLogoutGet, async (c) => {
   await LogoutUseCase(c);
   return c.redirect("/login");
 });

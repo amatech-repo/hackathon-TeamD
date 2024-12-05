@@ -7,16 +7,24 @@ import { GetAllUsersUseCase } from "@server/usecase/user/get-all-users.usecase";
 import { GetUserUseCase } from "@server/usecase/user/get-user.usecase";
 import { UpdateUserUseCase } from "@server/usecase/user/update-user.usecase";
 import { HTTPException } from "hono/http-exception";
+import {
+  userRecipeGetById,
+  userRecipeGetMe,
+  userRecipeUpdateMe,
+  usersRecipeGet,
+} from "./recipe/users.recipe";
+import { UserDto, UsersDto } from "./dto/user.dto";
 
 export const usersController = new OpenAPIHono();
 
 usersController.use("/*", userGuard());
 
-usersController.get("/", async (c) => {
+usersController.openapi(usersRecipeGet, async (c) => {
   const users = await GetAllUsersUseCase(c);
-  return c.json(users);
+  return c.json(UsersDto.entityToDto(users));
 });
-usersController.get("/me", async (c) => {
+
+usersController.openapi(userRecipeGetMe, async (c) => {
   const userId = c.get("usr_id");
   if (!userId) {
     throw new HTTPException(401, {
@@ -29,9 +37,9 @@ usersController.get("/me", async (c) => {
       message: "User not found",
     });
   }
-  return c.json(user);
+  return c.json(UserDto.entityToDto(user));
 });
-usersController.put("/me", async (c) => {
+usersController.openapi(userRecipeUpdateMe, async (c) => {
   const userId = c.get("usr_id");
   if (!userId) {
     throw new HTTPException(401, {
@@ -44,9 +52,9 @@ usersController.put("/me", async (c) => {
     userId,
     name,
   });
-  return c.json(updatedUser);
+  return c.json(UserDto.entityToDto(updatedUser));
 });
-usersController.delete("/me", async (c) => {
+usersController.openapi(userRecipeUpdateMe, async (c) => {
   const userId = c.get("usr_id");
   if (!userId) {
     throw new HTTPException(401, {
@@ -57,7 +65,7 @@ usersController.delete("/me", async (c) => {
   await DeleteUserUseCase({ c, userId });
   return c.redirect("/");
 });
-usersController.get("/:id", async (c) => {
+usersController.openapi(userRecipeGetById, async (c) => {
   const userId = c.req.param("id");
   const user = await GetUserUseCase({ c, userId });
   if (!user) {
