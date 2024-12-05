@@ -1,4 +1,3 @@
-import { AnswerEntity } from "@server/domain/entity/answer.entity";
 import { QuestionEntity } from "@server/domain/entity/question.entity";
 import { IDbAbstract } from "./db.abstract.interface";
 

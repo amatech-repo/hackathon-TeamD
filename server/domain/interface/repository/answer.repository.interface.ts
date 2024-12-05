@@ -1,15 +1,8 @@
-import { AnswerOptionEntity } from "@server/domain/entity/answer-option.entity";
 import { AnswerEntity } from "@server/domain/entity/answer.entity";
 import { IDbAbstract } from "./db.abstract.interface";
 
 export interface IAnswerRepository extends IDbAbstract {
-  createAnswer({
-    questionId,
-    type,
-  }: {
-    questionId: string;
-    type: string;
-  }): Promise<AnswerEntity>;
+  createAnswer({ type }: { type: string }): Promise<AnswerEntity>;
   updateAnswer({
     id,
     type,

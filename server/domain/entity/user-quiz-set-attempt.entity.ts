@@ -1,10 +1,10 @@
 type UserQuizSetAttemptEntityProps = {
   id: string;
-  title: string;
-  description?: string;
-  level: number;
-  creatorId: string;
-  isPublic: boolean;
+  userId: string;
+  quizSetId: string;
+  lastCorrectQuizzesCount: number;
+  lastQuizzesScore: number;
+  isCompleted: boolean;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -19,24 +19,31 @@ export class UserQuizSetAttemptEntity {
   get id(): string {
     return this.props.id;
   }
-  get title(): string {
-    return this.props.title;
+
+  get userId(): string {
+    return this.props.userId;
   }
-  get description(): string | undefined {
-    return this.props.description;
+
+  get quizSetId(): string {
+    return this.props.quizSetId;
   }
-  get level(): number {
-    return this.props.level;
+
+  get lastCorrectQuizzesCount(): number {
+    return this.props.lastCorrectQuizzesCount;
   }
-  get creatorId(): string {
-    return this.props.creatorId;
+
+  get lastQuizzesScore(): number {
+    return this.props.lastQuizzesScore;
   }
-  get isPublic(): boolean {
-    return this.props.isPublic;
+
+  get isCompleted(): boolean {
+    return this.props.isCompleted;
   }
+
   get createdAt(): Date {
     return this.props.createdAt;
   }
+
   get updatedAt(): Date {
     return this.props.updatedAt;
   }

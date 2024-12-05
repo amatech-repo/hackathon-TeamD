@@ -1,14 +1,15 @@
 import { IUserQuizAttemptRepository } from "@server/domain/interface/repository/user-quiz-attempt.repository.interface";
 import { DBAbstract } from "./db.abstract.repository";
 import { UserQuizAttemptEntity } from "@server/domain/entity/user-quiz-attemp.entity";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, UserQuizAttempt } from "@prisma/client";
+import { HTTPException } from "hono/http-exception";
 
 export class UserQuizAttemptRepository
   extends DBAbstract
   implements IUserQuizAttemptRepository
 {
   prisma: PrismaClient | null = null;
-  createQuizAttempt({
+  async createQuizAttempt({
     userId,
     quizId,
     isCompleted,
@@ -21,9 +22,31 @@ export class UserQuizAttemptRepository
     lastSelectedAnswerOptionId?: string;
     userQuizSetAttemptId?: string;
   }): Promise<UserQuizAttemptEntity> {
-    throw new Error("Method not implemented.");
+    try {
+      if (!this.prisma || !(this.prisma instanceof PrismaClient)) {
+        console.error("prisma is null or not instance of PrismaClient");
+        throw new HTTPException(500, {
+          message: "Internal Server Error ",
+        });
+      }
+      const userQuizAttempt = await this.prisma.userQuizAttempt.create({
+        data: {
+          userId,
+          quizId,
+          isCompleted,
+          lastSelectedAnswerOptionId,
+          userQuizSetAttemptId,
+        },
+      });
+      return UserQuizAttemptRepository.toEntity(userQuizAttempt);
+    } catch (e) {
+      console.error(e);
+      throw new HTTPException(500, {
+        message: "Internal Server Error ",
+      });
+    }
   }
-  updateQuizAttemptById({
+  async updateQuizAttemptById({
     id,
     isCompleted,
     lastSelectedAnswerOptionId,
@@ -34,23 +57,164 @@ export class UserQuizAttemptRepository
     lastSelectedAnswerOptionId?: string;
     userQuizSetAttemptId?: string;
   }): Promise<UserQuizAttemptEntity | null> {
-    throw new Error("Method not implemented.");
+    try {
+      if (!this.prisma || !(this.prisma instanceof PrismaClient)) {
+        console.error("prisma is null or not instance of PrismaClient");
+        throw new HTTPException(500, {
+          message: "Internal Server Error ",
+        });
+      }
+      const userQuizAttempt = await this.prisma.userQuizAttempt.update({
+        where: {
+          id,
+        },
+        data: {
+          isCompleted,
+          lastSelectedAnswerOptionId,
+          userQuizSetAttemptId,
+        },
+      });
+      if (!userQuizAttempt) {
+        throw new HTTPException(404, {
+          message: "UserQuizAttempt not found",
+        });
+      }
+      return UserQuizAttemptRepository.toEntity(userQuizAttempt);
+    } catch (e) {
+      console.error(e);
+      throw new HTTPException(500, {
+        message: "Internal Server Error ",
+      });
+    }
   }
-  getQuizAttemptById(id: string): Promise<UserQuizAttemptEntity | null> {
-    throw new Error("Method not implemented.");
+  async getQuizAttemptById(id: string): Promise<UserQuizAttemptEntity | null> {
+    try {
+      if (!this.prisma || !(this.prisma instanceof PrismaClient)) {
+        console.error("prisma is null or not instance of PrismaClient");
+        throw new HTTPException(500, {
+          message: "Internal Server Error ",
+        });
+      }
+      const userQuizAttempt = await this.prisma.userQuizAttempt.findUnique({
+        where: {
+          id,
+        },
+      });
+      if (!userQuizAttempt) {
+        throw new HTTPException(404, {
+          message: "UserQuizAttempt not found",
+        });
+      }
+      return UserQuizAttemptRepository.toEntity(userQuizAttempt);
+    } catch (e) {
+      console.error(e);
+      throw new HTTPException(500, {
+        message: "Internal Server Error ",
+      });
+    }
   }
-  getQuizAttemptByUserId(userId: string): Promise<UserQuizAttemptEntity[]> {
-    throw new Error("Method not implemented.");
+  async getQuizAttemptByUserId(
+    userId: string,
+  ): Promise<UserQuizAttemptEntity[]> {
+    try {
+      if (!this.prisma || !(this.prisma instanceof PrismaClient)) {
+        console.error("prisma is null or not instance of PrismaClient");
+        throw new HTTPException(500, {
+          message: "Internal Server Error ",
+        });
+      }
+      const userQuizAttempts = await this.prisma.userQuizAttempt.findMany({
+        where: {
+          userId,
+        },
+      });
+      return userQuizAttempts.map(UserQuizAttemptRepository.toEntity);
+    } catch (e) {
+      console.error(e);
+      throw new HTTPException(500, {
+        message: "Internal Server Error ",
+      });
+    }
   }
-  getQuizAttemptByQuizId(quizId: string): Promise<UserQuizAttemptEntity[]> {
-    throw new Error("Method not implemented.");
+  async getQuizAttemptByQuizId(
+    quizId: string,
+  ): Promise<UserQuizAttemptEntity[]> {
+    try {
+      if (!this.prisma || !(this.prisma instanceof PrismaClient)) {
+        console.error("prisma is null or not instance of PrismaClient");
+        throw new HTTPException(500, {
+          message: "Internal Server Error ",
+        });
+      }
+      const userQuizAttempts = await this.prisma.userQuizAttempt.findMany({
+        where: {
+          quizId,
+        },
+      });
+      return userQuizAttempts.map(UserQuizAttemptRepository.toEntity);
+    } catch (e) {
+      console.error(e);
+      throw new HTTPException(500, {
+        message: "Internal Server Error ",
+      });
+    }
   }
-  getQuizAttemptByQuizSetId(
+  async getQuizAttemptByQuizSetId(
     quizSetId: string,
   ): Promise<UserQuizAttemptEntity[]> {
-    throw new Error("Method not implemented.");
+    try {
+      if (!this.prisma || !(this.prisma instanceof PrismaClient)) {
+        console.error("prisma is null or not instance of PrismaClient");
+        throw new HTTPException(500, {
+          message: "Internal Server Error ",
+        });
+      }
+      const userQuizAttempts = await this.prisma.userQuizAttempt.findMany({
+        where: {
+          quiz: {
+            quizSetId,
+          },
+        },
+      });
+      return userQuizAttempts.map(UserQuizAttemptRepository.toEntity);
+    } catch (e) {
+      console.error(e);
+      throw new HTTPException(500, {
+        message: "Internal Server Error ",
+      });
+    }
   }
-  deleteQuizAttemptById(id: string): Promise<void> {
-    throw new Error("Method not implemented.");
+  async deleteQuizAttemptById(id: string): Promise<void> {
+    try {
+      if (!this.prisma || !(this.prisma instanceof PrismaClient)) {
+        console.error("prisma is null or not instance of PrismaClient");
+        throw new HTTPException(500, {
+          message: "Internal Server Error ",
+        });
+      }
+    } catch (e) {
+      console.error(e);
+      throw new HTTPException(500, {
+        message: "Internal Server Error ",
+      });
+    }
+    await this.prisma.userQuizAttempt.delete({
+      where: {
+        id,
+      },
+    });
+  }
+  static toEntity(userQuizAttempt: UserQuizAttempt): UserQuizAttemptEntity {
+    return new UserQuizAttemptEntity({
+      id: userQuizAttempt.id,
+      userId: userQuizAttempt.userId,
+      quizId: userQuizAttempt.quizId,
+      isCompleted: userQuizAttempt.isCompleted,
+      lastSelectedAnswerOptionId:
+        userQuizAttempt.lastSelectedAnswerOptionId ?? undefined,
+      userQuizSetAttemptId: userQuizAttempt.userQuizSetAttemptId ?? undefined,
+      createdAt: userQuizAttempt.createdAt,
+      updatedAt: userQuizAttempt.updatedAt,
+    });
   }
 }

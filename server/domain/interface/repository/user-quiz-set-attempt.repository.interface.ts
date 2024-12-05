@@ -3,30 +3,28 @@ import { IDbAbstract } from "./db.abstract.interface";
 
 export interface IUserQuizSetAttemptRepository extends IDbAbstract {
   create({
-    title,
-    description,
-    level,
-    creatorId,
-    isPublic,
+    userId,
+    quizSetId,
+    lastCorrectQuizzesCount,
+    lastQuizzesScore,
+    isCompleted,
   }: {
-    title: string;
-    description?: string;
-    level: number;
-    creatorId: string;
-    isPublic: boolean;
+    userId: string;
+    quizSetId: string;
+    lastCorrectQuizzesCount: number;
+    lastQuizzesScore: number;
+    isCompleted: boolean;
   }): Promise<UserQuizSetAttemptEntity>;
   update({
     id,
-    title,
-    description,
-    level,
-    isPublic,
+    lastCorrectQuizzesCount,
+    lastQuizzesScore,
+    isCompleted,
   }: {
     id: string;
-    title?: string;
-    description?: string;
-    level?: number;
-    isPublic?: boolean;
+    lastCorrectQuizzesCount?: number;
+    lastQuizzesScore?: number;
+    isCompleted?: boolean;
   }): Promise<UserQuizSetAttemptEntity | null>;
   getById(id: string): Promise<UserQuizSetAttemptEntity | null>;
   getByUserIdAndQuizSetId({
@@ -36,6 +34,7 @@ export interface IUserQuizSetAttemptRepository extends IDbAbstract {
     userId: string;
     quizSetId: string;
   }): Promise<UserQuizSetAttemptEntity | null>;
+  getByQuizSetId(quizSetId: string): Promise<UserQuizSetAttemptEntity[]>;
   getByUserId(userId: string): Promise<UserQuizSetAttemptEntity[]>;
   deleteById(id: string): Promise<void>;
 }

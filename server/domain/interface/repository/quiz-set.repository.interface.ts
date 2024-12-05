@@ -1,5 +1,4 @@
 import { QuizSetEntity } from "@server/domain/entity/quiz-set.entity";
-import { QuizEntity } from "@server/domain/entity/quiz.entity";
 import { IDbAbstract } from "./db.abstract.interface";
 
 export interface IQuizSetRepository extends IDbAbstract {
