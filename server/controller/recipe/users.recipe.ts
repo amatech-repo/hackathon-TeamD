@@ -8,7 +8,7 @@ import {
 
 export const usersRecipeGet = createRoute({
   method: "get",
-  path: "/users",
+  path: "/",
   tags: ["users"],
   responses: {
     200: {
@@ -24,7 +24,7 @@ export const usersRecipeGet = createRoute({
 
 export const userRecipeGetMe = createRoute({
   method: "get",
-  path: "/users/me",
+  path: "/me",
   tags: ["users"],
   responses: {
     200: {
@@ -46,7 +46,7 @@ export const userRecipeGetMe = createRoute({
 
 export const userRecipeUpdateMe = createRoute({
   method: "put",
-  path: "/users/me",
+  path: "/me",
   tags: ["users"],
   request: {
     body: {
@@ -74,7 +74,7 @@ export const userRecipeUpdateMe = createRoute({
 
 export const userRecipeDeleteMe = createRoute({
   method: "delete",
-  path: "/users/me",
+  path: "/me",
   tags: ["users"],
   responses: {
     302: {
@@ -88,7 +88,7 @@ export const userRecipeDeleteMe = createRoute({
 
 export const userRecipeGetById = createRoute({
   method: "get",
-  path: "/users/:id",
+  path: "/:id",
   tags: ["users"],
   request: {
     params: UserParamsDto.userParamsSchema,
