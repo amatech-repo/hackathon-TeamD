@@ -9,7 +9,7 @@ export class UserQuizSetAttemptRepository
   implements IUserQuizSetAttemptRepository
 {
   prisma: PrismaClient | null = null;
-  async create({
+  async upsert({
     userId,
     quizSetId,
     lastCorrectQuizzesCount,
@@ -29,8 +29,19 @@ export class UserQuizSetAttemptRepository
           message: "Internal Server Error ",
         });
       }
-      const userQuizSetAttempt = await this.prisma.userQuizSetAttempt.create({
-        data: {
+      const userQuizSetAttempt = await this.prisma.userQuizSetAttempt.upsert({
+        where: {
+          userId_quizSetId: {
+            userId,
+            quizSetId,
+          },
+        },
+        update: {
+          lastCorrectQuizzesCount,
+          lastQuizzesScore,
+          isCompleted,
+        },
+        create: {
           userId,
           quizSetId,
           lastCorrectQuizzesCount,
@@ -38,47 +49,6 @@ export class UserQuizSetAttemptRepository
           isCompleted,
         },
       });
-      return UserQuizSetAttemptRepository.toEntity(userQuizSetAttempt);
-    } catch (e) {
-      console.error(e);
-      throw new HTTPException(500, {
-        message: "Internal Server Error ",
-      });
-    }
-  }
-  async update({
-    id,
-    lastCorrectQuizzesCount,
-    lastQuizzesScore,
-    isCompleted,
-  }: {
-    id: string;
-    lastCorrectQuizzesCount?: number;
-    lastQuizzesScore?: number;
-    isCompleted?: boolean;
-  }): Promise<UserQuizSetAttemptEntity | null> {
-    try {
-      if (!this.prisma || !(this.prisma instanceof PrismaClient)) {
-        console.error("prisma is null or not instance of PrismaClient");
-        throw new HTTPException(500, {
-          message: "Internal Server Error ",
-        });
-      }
-      const userQuizSetAttempt = await this.prisma.userQuizSetAttempt.update({
-        where: {
-          id,
-        },
-        data: {
-          lastCorrectQuizzesCount,
-          lastQuizzesScore,
-          isCompleted,
-        },
-      });
-      if (!userQuizSetAttempt) {
-        throw new HTTPException(404, {
-          message: "UserQuizSetAttempt not found",
-        });
-      }
       return UserQuizSetAttemptRepository.toEntity(userQuizSetAttempt);
     } catch (e) {
       console.error(e);
@@ -128,14 +98,15 @@ export class UserQuizSetAttemptRepository
           message: "Internal Server Error ",
         });
       }
-      const userQuizSetAttempt = await this.prisma.userQuizSetAttempt.findFirst(
-        {
+      const userQuizSetAttempt =
+        await this.prisma.userQuizSetAttempt.findUnique({
           where: {
-            userId,
-            quizSetId,
+            userId_quizSetId: {
+              userId,
+              quizSetId,
+            },
           },
-        },
-      );
+        });
       if (!userQuizSetAttempt) {
         throw new HTTPException(404, {
           message: "UserQuizSetAttempt not found",

@@ -2,7 +2,7 @@ import { UserQuizSetAttemptEntity } from "@server/domain/entity/user-quiz-set-at
 import { IDbAbstract } from "./db.abstract.interface";
 
 export interface IUserQuizSetAttemptRepository extends IDbAbstract {
-  create({
+  upsert({
     userId,
     quizSetId,
     lastCorrectQuizzesCount,
@@ -14,17 +14,6 @@ export interface IUserQuizSetAttemptRepository extends IDbAbstract {
     lastCorrectQuizzesCount: number;
     lastQuizzesScore: number;
     isCompleted: boolean;
-  }): Promise<UserQuizSetAttemptEntity>;
-  update({
-    id,
-    lastCorrectQuizzesCount,
-    lastQuizzesScore,
-    isCompleted,
-  }: {
-    id: string;
-    lastCorrectQuizzesCount?: number;
-    lastQuizzesScore?: number;
-    isCompleted?: boolean;
   }): Promise<UserQuizSetAttemptEntity | null>;
   getById(id: string): Promise<UserQuizSetAttemptEntity | null>;
   getByUserIdAndQuizSetId({

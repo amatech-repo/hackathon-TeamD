@@ -9,7 +9,8 @@ export class UserQuizAttemptRepository
   implements IUserQuizAttemptRepository
 {
   prisma: PrismaClient | null = null;
-  async createQuizAttempt({
+
+  async upsert({
     userId,
     quizId,
     isCompleted,
@@ -29,8 +30,19 @@ export class UserQuizAttemptRepository
           message: "Internal Server Error ",
         });
       }
-      const userQuizAttempt = await this.prisma.userQuizAttempt.create({
-        data: {
+      const userQuizAttempt = await this.prisma.userQuizAttempt.upsert({
+        where: {
+          userId_quizId: {
+            userId,
+            quizId,
+          },
+        },
+        update: {
+          isCompleted,
+          lastSelectedAnswerOptionId,
+          userQuizSetAttemptId,
+        },
+        create: {
           userId,
           quizId,
           isCompleted,
@@ -38,47 +50,6 @@ export class UserQuizAttemptRepository
           userQuizSetAttemptId,
         },
       });
-      return UserQuizAttemptRepository.toEntity(userQuizAttempt);
-    } catch (e) {
-      console.error(e);
-      throw new HTTPException(500, {
-        message: "Internal Server Error ",
-      });
-    }
-  }
-  async updateQuizAttemptById({
-    id,
-    isCompleted,
-    lastSelectedAnswerOptionId,
-    userQuizSetAttemptId,
-  }: {
-    id: string;
-    isCompleted: boolean;
-    lastSelectedAnswerOptionId?: string;
-    userQuizSetAttemptId?: string;
-  }): Promise<UserQuizAttemptEntity | null> {
-    try {
-      if (!this.prisma || !(this.prisma instanceof PrismaClient)) {
-        console.error("prisma is null or not instance of PrismaClient");
-        throw new HTTPException(500, {
-          message: "Internal Server Error ",
-        });
-      }
-      const userQuizAttempt = await this.prisma.userQuizAttempt.update({
-        where: {
-          id,
-        },
-        data: {
-          isCompleted,
-          lastSelectedAnswerOptionId,
-          userQuizSetAttemptId,
-        },
-      });
-      if (!userQuizAttempt) {
-        throw new HTTPException(404, {
-          message: "UserQuizAttempt not found",
-        });
-      }
       return UserQuizAttemptRepository.toEntity(userQuizAttempt);
     } catch (e) {
       console.error(e);

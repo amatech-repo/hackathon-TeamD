@@ -21,11 +21,11 @@ model User {
   // Quiz-related fields
   createdQuizSets           QuizSet[]            @relation("CreatedQuizSets")
   createdQuizzes            Quiz[]               @relation("CreatedQuizzes")
-  userLastQuizAttempt       UserQuizAttempt[]    @relation("UserQuizAttempts")
-  userLastQuizSetAttempt    UserQuizSetAttempt[] @relation("UserQuizSetAttempts")
+  userLastQuizAttempt       UserQuizAttempt[]    @relation("UserQuizAttempts") // ユーザーが消されたら消す
+  userLastQuizSetAttempt    UserQuizSetAttempt[] @relation("UserQuizSetAttempts") // ユーザーが消されたら消す
   proposedQuizModifications QuizModification[]
 
-  userScores UserScore[]
+  userScores UserScore[] // ユーザーが消されたら消す
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
