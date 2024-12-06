@@ -11,3 +11,4 @@ appRouter.get("/", (c) => {
 
 appRouter.route("/auth", authController);
 appRouter.route("/users", usersController);
+
