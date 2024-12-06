@@ -19,7 +19,7 @@ export class SessionStoreRepository
           message: "Internal Server Error ",
         });
       }
-      const session = await this.prisma.session.findFirst({
+      const session = await this.prisma.session.findUnique({
         where: {
           sessionId,
         },
