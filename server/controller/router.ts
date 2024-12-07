@@ -7,6 +7,7 @@ import { rankingController } from "./ranking.controller";
 import { tagController } from "./tags.controller";
 import { quizAttemptController } from "./quiz-attempt.controller";
 import { quizSetAttemptController } from "./quiz-set-attempt.controller";
+import { quizzesController } from "./quizzes.controller";
 
 export const appRouter = new OpenAPIHono();
 appRouter.get("/", (c) => {
@@ -26,3 +27,4 @@ appRouter.route("/ranking", rankingController);
 appRouter.route("/tags", tagController);
 appRouter.route("/quiz-attempt", quizAttemptController);
 appRouter.route("/quizset-attempt", quizSetAttemptController);
+appRouter.route("/quizzes", quizzesController);
