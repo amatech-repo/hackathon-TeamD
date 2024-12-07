@@ -10,7 +10,6 @@ export default function MyPage() {
   const [viewMode, setViewMode] = useState<"sets" | "quizzes">("sets");
 
   const handleDeleteUser = () => {
-    // ユーザー削除処理をここで実装
     console.log("ユーザー削除");
     setIsModalOpen(false);
   };
@@ -45,7 +44,17 @@ export default function MyPage() {
         <UserHistory mode={viewMode} />
       </div>
 
-      {/* ユーザー削除モーダル */}
+      {/* ユーザー削除 */}
+      <div className="mt-8">
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+        >
+          ユーザー削除
+        </button>
+      </div>
+
+      {/* 削除確認モーダル */}
       {isModalOpen && (
         <ConfirmationModal
           message="本当にユーザーを削除しますか？"

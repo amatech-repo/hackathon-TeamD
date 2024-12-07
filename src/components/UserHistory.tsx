@@ -1,3 +1,6 @@
+import React from "react";
+import Link from "next/link";
+
 interface IUserHistoryProps {
   mode: "sets" | "quizzes";
 }
@@ -28,6 +31,14 @@ export default function UserHistory({ mode }: IUserHistoryProps) {
           </li>
         ))}
       </ul>
+      <div className="mt-4">
+        <Link
+          href="/me/attempt"
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          もっと見る
+        </Link>
+      </div>
     </div>
   );
 }
