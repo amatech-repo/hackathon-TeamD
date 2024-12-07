@@ -8,6 +8,7 @@ export class AnswerRepository extends DBAbstract implements IAnswerRepository {
   prisma: PrismaClient | null = null;
   async createAnswer({
     type,
+    questionId,
   }: {
     questionId: string;
     type: string;
@@ -22,6 +23,11 @@ export class AnswerRepository extends DBAbstract implements IAnswerRepository {
       const answer = await this.prisma.answer.create({
         data: {
           type,
+          questionAnswers: {
+            create: {
+              questionId,
+            },
+          },
         },
       });
       return AnswerRepository.toEntity(answer);

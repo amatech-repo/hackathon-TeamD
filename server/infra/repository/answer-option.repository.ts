@@ -270,6 +270,35 @@ export class AnswerOptionRepository
       });
     }
   }
+  async createAnswerOptions({
+    options,
+    answerId,
+  }: {
+    options: { isCorrect: boolean; option: string }[];
+    answerId: string;
+  }): Promise<AnswerOptionEntity[]> {
+    try {
+      if (!this.prisma || !(this.prisma instanceof PrismaClient)) {
+        console.error("prisma is null or not instance of PrismaClient");
+        throw new HTTPException(500, {
+          message: "Internal Server Error ",
+        });
+      }
+      const answerOptions = await this.prisma.answerOption.createManyAndReturn({
+        data: options.map((option) => ({
+          answerId,
+          option: option.option,
+          isCorrect: option.isCorrect,
+        })),
+      });
+      return answerOptions.map(AnswerOptionRepository.toEntity);
+    } catch (e) {
+      console.error(e);
+      throw new HTTPException(500, {
+        message: "Internal Server Error ",
+      });
+    }
+  }
   async updateAnswerOption({
     id,
     option,

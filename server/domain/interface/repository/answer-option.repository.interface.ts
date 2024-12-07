@@ -26,6 +26,13 @@ export interface IAnswerOptionRepository extends IDbAbstract {
     option: string;
     isCorrect: boolean;
   }): Promise<AnswerOptionEntity>;
+  createAnswerOptions({
+    options,
+    answerId,
+  }: {
+    options: { isCorrect: boolean; option: string }[];
+    answerId: string;
+  }): Promise<AnswerOptionEntity[]>;
   updateAnswerOption({
     id,
     option,

@@ -85,25 +85,3 @@ export const userRecipeDeleteMe = createRoute({
     },
   },
 });
-
-export const userRecipeGetById = createRoute({
-  method: "get",
-  path: "/:id",
-  tags: ["users"],
-  request: {
-    params: UserParamsDto.userParamsSchema,
-  },
-  responses: {
-    200: {
-      content: {
-        "application/json": {
-          schema: UserDto.userSchema,
-        },
-      },
-      description: "特定のユーザー情報を取得",
-    },
-    404: {
-      description: "ユーザーが見つからない",
-    },
-  },
-});
