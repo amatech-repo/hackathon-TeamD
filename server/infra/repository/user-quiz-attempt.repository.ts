@@ -130,9 +130,13 @@ export class UserQuizAttemptRepository
       });
     }
   }
-  async getQuizAttemptByQuizSetId(
-    quizSetId: string,
-  ): Promise<UserQuizAttemptEntity[]> {
+  async getQuizAttemptByUserIdAndQuizId({
+    quizId,
+    userId,
+  }: {
+    quizId: string;
+    userId: string;
+  }) {
     try {
       if (!this.prisma || !(this.prisma instanceof PrismaClient)) {
         console.error("prisma is null or not instance of PrismaClient");
@@ -140,14 +144,20 @@ export class UserQuizAttemptRepository
           message: "Internal Server Error ",
         });
       }
-      const userQuizAttempts = await this.prisma.userQuizAttempt.findMany({
+      const userQuizAttempt = await this.prisma.userQuizAttempt.findUnique({
         where: {
-          quiz: {
-            quizSetId,
+          userId_quizId: {
+            userId,
+            quizId,
           },
         },
       });
-      return userQuizAttempts.map(UserQuizAttemptRepository.toEntity);
+      if (!userQuizAttempt) {
+        throw new HTTPException(404, {
+          message: "UserQuizAttempt not found",
+        });
+      }
+      return UserQuizAttemptRepository.toEntity(userQuizAttempt);
     } catch (e) {
       console.error(e);
       throw new HTTPException(500, {

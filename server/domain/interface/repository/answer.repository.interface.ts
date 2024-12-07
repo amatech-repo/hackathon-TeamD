@@ -2,7 +2,13 @@ import { AnswerEntity } from "@server/domain/entity/answer.entity";
 import { IDbAbstract } from "./db.abstract.interface";
 
 export interface IAnswerRepository extends IDbAbstract {
-  createAnswer({ type , questionId }: { questionId:string; type: string }): Promise<AnswerEntity>;
+  createAnswer({
+    type,
+    questionId,
+  }: {
+    questionId: string;
+    type: string;
+  }): Promise<AnswerEntity>;
   updateAnswer({
     id,
     type,

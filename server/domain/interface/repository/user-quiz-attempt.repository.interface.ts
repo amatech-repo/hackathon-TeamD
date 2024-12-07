@@ -18,8 +18,12 @@ export interface IUserQuizAttemptRepository extends IDbAbstract {
   getQuizAttemptById(id: string): Promise<UserQuizAttemptEntity | null>;
   getQuizAttemptByUserId(userId: string): Promise<UserQuizAttemptEntity[]>;
   getQuizAttemptByQuizId(quizId: string): Promise<UserQuizAttemptEntity[]>;
-  getQuizAttemptByQuizSetId(
-    quizSetId: string,
-  ): Promise<UserQuizAttemptEntity[]>;
+  getQuizAttemptByUserIdAndQuizId({
+    quizId,
+    userId,
+  }: {
+    quizId: string;
+    userId: string;
+  }): Promise<UserQuizAttemptEntity>;
   deleteQuizAttemptById(id: string): Promise<void>;
 }

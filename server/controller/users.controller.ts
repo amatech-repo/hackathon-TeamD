@@ -9,7 +9,6 @@ import { UpdateUserUseCase } from "@server/usecase/user/update-user.usecase";
 import { HTTPException } from "hono/http-exception";
 import {
   userRecipeDeleteMe,
-  userRecipeGetById,
   userRecipeGetMe,
   userRecipeUpdateMe,
   usersRecipeGet,
@@ -80,52 +79,6 @@ usersController.get("/me/score", async (c) => {
   if (!userId) {
     throw new HTTPException(401, {
       message: "you are not login",
-    });
-  }
-  const score = await GetUserScoreByUserIdUseCase({ userId, c });
-  if (!score) {
-    throw new HTTPException(404, {
-      message: "User score not found",
-    });
-  }
-  return c.json(score);
-});
-
-usersController.get("ranking", async (c) => {
-  const topN = c.req.query("topN") ?? "1";
-  const num = parseInt(topN) || 1;
-  const topNUsersAndScore = await GetUserTopNScoreRankingUseCase({
-    topN: num,
-    c,
-  });
-  console.log("GetUserTopNScoreRankingUseCase:", topNUsersAndScore);
-  return c.json(topNUsersAndScore);
-});
-
-// users/:idは、users/~以下の全てにマッチするので、最後に書く
-
-usersController.openapi(userRecipeGetById, async (c) => {
-  const userId = c.req.param("id");
-  if (!userId) {
-    throw new HTTPException(400, {
-      message: "userId is required",
-    });
-  }
-  const user = await GetUserUseCase({ c, userId });
-  if (!user) {
-    throw new HTTPException(404, {
-      message: "User not found",
-    });
-  }
-  return c.json(user);
-});
-
-
-usersController.get(":id/score", async (c) => {
-  const userId = c.req.param("id");
-  if (!userId) {
-    throw new HTTPException(400, {
-      message: "userId is required",
     });
   }
   const score = await GetUserScoreByUserIdUseCase({ userId, c });

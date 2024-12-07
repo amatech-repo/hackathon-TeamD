@@ -57,7 +57,9 @@ export class UserQuizSetAttemptRepository
       });
     }
   }
-  async getById(id: string): Promise<UserQuizSetAttemptEntity | null> {
+  async getQuizSetAttemptById(
+    id: string,
+  ): Promise<UserQuizSetAttemptEntity | null> {
     try {
       if (!this.prisma || !(this.prisma instanceof PrismaClient)) {
         console.error("prisma is null or not instance of PrismaClient");
@@ -84,7 +86,7 @@ export class UserQuizSetAttemptRepository
       });
     }
   }
-  async getByUserIdAndQuizSetId({
+  async getQuizSetAttemptByUserIdAndQuizSetId({
     userId,
     quizSetId,
   }: {
@@ -120,7 +122,9 @@ export class UserQuizSetAttemptRepository
       });
     }
   }
-  async getByUserId(userId: string): Promise<UserQuizSetAttemptEntity[]> {
+  async getQuizSetAttemptsByUserId(
+    userId: string,
+  ): Promise<UserQuizSetAttemptEntity[]> {
     try {
       if (!this.prisma || !(this.prisma instanceof PrismaClient)) {
         console.error("prisma is null or not instance of PrismaClient");
@@ -143,7 +147,9 @@ export class UserQuizSetAttemptRepository
       });
     }
   }
-  async getByQuizSetId(quizSetId: string): Promise<UserQuizSetAttemptEntity[]> {
+  async getQuizSetAttemptsByQuizSetId(
+    quizSetId: string,
+  ): Promise<UserQuizSetAttemptEntity[]> {
     try {
       if (!this.prisma || !(this.prisma instanceof PrismaClient)) {
         console.error("prisma is null or not instance of PrismaClient");
@@ -186,7 +192,6 @@ export class UserQuizSetAttemptRepository
       });
     }
   }
-
   static toEntity(
     userQuizSetAttempt: UserQuizSetAttempt,
   ): UserQuizSetAttemptEntity {

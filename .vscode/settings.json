@@ -13,5 +13,5 @@
     "editor.formatOnSave": true
   },
   "eslint.validate": ["typescript", "typescriptreact"],
-  "cSpell.words": ["Modif", "usecase", "Usecase"]
+  "cSpell.words": ["Dtos", "Modif", "quizset", "usecase", "Usecase"]
 }

@@ -15,3 +15,6 @@ export async function GetUserUseCase({
   const user = await userRepository.getUser(userId);
   return user;
 }
+export function hello(props: { a: string; b: number }) {
+  console.log(props.a, props.b);
+}
