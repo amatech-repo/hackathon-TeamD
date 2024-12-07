@@ -14,9 +14,12 @@ export async function SearchQuizUseCase({
   const searchQuizRepository: ISearchQuizRepository =
     new SearchQuizRepository();
   await searchQuizRepository.initPrisma(c);
+  console.log("search", search);
+  console.log("level", level);
   const searchedQuiz = await searchQuizRepository.search({
     search,
     level,
   });
+  console.log(searchedQuiz);
   return searchedQuiz;
 }
