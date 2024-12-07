@@ -43,3 +43,8 @@ next-env.d.ts
 # SQLite
 *.db
 *.db-journal
+
+# vscode
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
