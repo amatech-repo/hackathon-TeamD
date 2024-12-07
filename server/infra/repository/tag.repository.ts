@@ -93,6 +93,27 @@ export class TagRepository extends DBAbstract implements ITagRepository {
       });
     }
   }
+  async createTags(name: string[]): Promise<TagEntity[]> {
+    try {
+      if (!this.prisma || !(this.prisma instanceof PrismaClient)) {
+        console.error("prisma is null or not instance of PrismaClient");
+        throw new HTTPException(500, {
+          message: "Internal Server Error ",
+        });
+      }
+      const tags = await this.prisma.tag.createManyAndReturn({
+        data: name.map((name) => ({
+          name,
+        })),
+      });
+      return tags.map(TagRepository.toEntity);
+    } catch (e) {
+      console.error(e);
+      throw new HTTPException(500, {
+        message: "Internal Server Error ",
+      });
+    }
+  }
   async updateTag({
     id,
     name,
@@ -137,6 +158,30 @@ export class TagRepository extends DBAbstract implements ITagRepository {
       await this.prisma.tag.delete({
         where: {
           id,
+        },
+      });
+    } catch (e) {
+      console.error(e);
+      throw new HTTPException(500, {
+        message: "Internal Server Error ",
+      });
+    }
+  }
+  async deleteTagsByQuizSetId(quizSetId: string): Promise<void> {
+    try {
+      if (!this.prisma || !(this.prisma instanceof PrismaClient)) {
+        console.error("prisma is null or not instance of PrismaClient");
+        throw new HTTPException(500, {
+          message: "Internal Server Error ",
+        });
+      }
+      await this.prisma.tag.deleteMany({
+        where: {
+          quizSetTag: {
+            some: {
+              quizSetId,
+            },
+          },
         },
       });
     } catch (e) {

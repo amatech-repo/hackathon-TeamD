@@ -116,6 +116,53 @@ export class QuizSetRepository
       });
     }
   }
+  async updateQuizSetByIdAndUserId({
+    id,
+    creatorId,
+    title,
+    description,
+    level,
+    isPublic,
+  }: {
+    id: string;
+    title?: string;
+    creatorId: string;
+    description?: string;
+    level?: number;
+    isPublic?: boolean;
+  }): Promise<QuizSetEntity> {
+    try {
+      if (!this.prisma || !(this.prisma instanceof PrismaClient)) {
+        console.error("prisma is null or not instance of PrismaClient");
+        throw new HTTPException(500, {
+          message: "Internal Server Error ",
+        });
+      }
+      const quizSet = await this.prisma.quizSet.update({
+        where: {
+          id,
+          creatorId,
+        },
+        data: {
+          title,
+          description,
+          level,
+          isPublic,
+        },
+      });
+      if (!quizSet) {
+        throw new HTTPException(404, {
+          message: "QuizSet not found",
+        });
+      }
+      return QuizSetRepository.toEntity(quizSet);
+    } catch (e) {
+      console.error(e);
+      throw new HTTPException(500, {
+        message: "Internal Server Error ",
+      });
+    }
+  }
   async getQuizSetsByCreatorId(creatorId: string): Promise<QuizSetEntity[]> {
     try {
       if (!this.prisma || !(this.prisma instanceof PrismaClient)) {
@@ -148,6 +195,33 @@ export class QuizSetRepository
       await this.prisma.quizSet.delete({
         where: {
           id: quizId,
+        },
+      });
+    } catch (e) {
+      console.error(e);
+      throw new HTTPException(500, {
+        message: "Internal Server Error ",
+      });
+    }
+  }
+  async deleteQuizSetByIdAndUserId({
+    quizSetId,
+    userId,
+  }: {
+    quizSetId: string;
+    userId: string;
+  }): Promise<void> {
+    try {
+      if (!this.prisma || !(this.prisma instanceof PrismaClient)) {
+        console.error("prisma is null or not instance of PrismaClient");
+        throw new HTTPException(500, {
+          message: "Internal Server Error ",
+        });
+      }
+      await this.prisma.quizSet.delete({
+        where: {
+          id: quizSetId,
+          creatorId: userId,
         },
       });
     } catch (e) {

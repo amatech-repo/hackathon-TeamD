@@ -15,6 +15,15 @@ export interface IUserQuizSetAttemptRepository extends IDbAbstract {
     lastQuizzesScore: number;
     isCompleted: boolean;
   }): Promise<UserQuizSetAttemptEntity | null>;
+  upsertIncrement({
+    userId,
+    quizSetId,
+    isCompleted,
+  }: {
+    userId: string;
+    quizSetId: string;
+    isCompleted: boolean;
+  }): Promise<UserQuizSetAttemptEntity>;
   getQuizSetAttemptById(id: string): Promise<UserQuizSetAttemptEntity | null>;
   getQuizSetAttemptByUserIdAndQuizSetId({
     userId,
@@ -30,4 +39,11 @@ export interface IUserQuizSetAttemptRepository extends IDbAbstract {
     userId: string,
   ): Promise<UserQuizSetAttemptEntity[]>;
   deleteById(id: string): Promise<void>;
+  deleteByUserIdAndQuizSetId({
+    userId,
+    quizSetId,
+  }: {
+    userId: string;
+    quizSetId: string;
+  }): Promise<void>;
 }

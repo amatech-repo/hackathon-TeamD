@@ -17,7 +17,7 @@ export interface IQuestionRepository extends IDbAbstract {
     question: string;
   }): Promise<QuestionEntity>;
   getQuestionById(id: string): Promise<QuestionEntity | null>;
-  getQuestionsByQuizId(quizId: string): Promise<QuestionEntity[]>;
+  getQuestionByQuizId(quizId: string): Promise<QuestionEntity | null>;
   getQuestionsByQuizSetId(quizSetId: string): Promise<QuestionEntity[]>;
   deleteQuestionById(id: string): Promise<void>;
 }

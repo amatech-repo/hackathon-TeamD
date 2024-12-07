@@ -357,6 +357,26 @@ export class AnswerOptionRepository
       });
     }
   }
+  async deleteAnswerOptionByAnserId(answerId: string): Promise<void> {
+    try {
+      if (!this.prisma || !(this.prisma instanceof PrismaClient)) {
+        console.error("prisma is null or not instance of PrismaClient");
+        throw new HTTPException(500, {
+          message: "Internal Server Error ",
+        });
+      }
+      await this.prisma.answerOption.deleteMany({
+        where: {
+          answerId,
+        },
+      });
+    } catch (e) {
+      console.error(e);
+      throw new HTTPException(500, {
+        message: "Internal Server Error ",
+      });
+    }
+  }
 
   static toEntity(answerOption: AnswerOption): AnswerOptionEntity {
     return new AnswerOptionEntity({

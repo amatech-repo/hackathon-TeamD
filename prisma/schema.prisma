@@ -113,7 +113,7 @@ model Quiz {
   creator   User   @relation("CreatedQuizzes", fields: [creatorId], references: [id])
   creatorId String
 
-  quizSet QuizSet? @relation(fields: [quizSetId], references: [id])
+  quizSet QuizSet? @relation(fields: [quizSetId], references: [id], onDelete: Cascade)
 
   quizAttempts UserQuizAttempt[]
 

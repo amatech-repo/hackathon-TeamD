@@ -6,6 +6,7 @@ export interface ITagRepository extends IDbAbstract {
   getTags(): Promise<TagEntity[]>;
   getTagsByQuizSetId(quizSetId: string): Promise<TagEntity[]>;
   createTag({ name }: { name: string }): Promise<TagEntity>;
+  createTags(name: string[]): Promise<TagEntity[]>;
   updateTag({
     id,
     name,
@@ -14,4 +15,5 @@ export interface ITagRepository extends IDbAbstract {
     name: string;
   }): Promise<TagEntity | null>;
   deleteTag(id: string): Promise<void>;
+  deleteTagsByQuizSetId(quizSetId: string): Promise<void>;
 }

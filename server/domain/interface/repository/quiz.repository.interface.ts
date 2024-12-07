@@ -14,7 +14,7 @@ export interface IQuizRepository extends IDbAbstract {
     creatorId: string;
     isPublic: boolean;
   }): Promise<QuizEntity>;
-  updateQuizById({
+  updateQuizByIdAndUserId({
     id,
     quizSetId,
     level,
@@ -28,6 +28,13 @@ export interface IQuizRepository extends IDbAbstract {
     isPublic: boolean;
   }): Promise<QuizEntity>;
   deleteQuizById(quizId: string): Promise<void>;
+  deleteQuizzesByQuizSetId({
+    userId,
+    quizSetId,
+  }: {
+    userId: string;
+    quizSetId: string;
+  }): Promise<void>;
   getQuizzesByQuizSetId(quizSetId: string): Promise<QuizEntity[]>;
   getQuizzesByCreatorId(creatorId: string): Promise<QuizEntity[]>;
 }

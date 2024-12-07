@@ -66,7 +66,7 @@ export class QuizRepository extends DBAbstract implements IQuizRepository {
       });
     }
   }
-  async updateQuizById({
+  async updateQuizByIdAndUserId({
     id,
     quizSetId,
     level,
@@ -89,11 +89,11 @@ export class QuizRepository extends DBAbstract implements IQuizRepository {
       const quiz = await this.prisma.quiz.update({
         where: {
           id,
+          creatorId: creatorId,
         },
         data: {
           quizSetId,
           level,
-          creatorId,
           isPublic,
         },
       });
@@ -121,6 +121,33 @@ export class QuizRepository extends DBAbstract implements IQuizRepository {
       await this.prisma.quiz.delete({
         where: {
           id: quizId,
+        },
+      });
+    } catch (e) {
+      console.error(e);
+      throw new HTTPException(500, {
+        message: "Internal Server Error ",
+      });
+    }
+  }
+  async deleteQuizzesByQuizSetId({
+    userId,
+    quizSetId,
+  }: {
+    userId: string;
+    quizSetId: string;
+  }): Promise<void> {
+    try {
+      if (!this.prisma || !(this.prisma instanceof PrismaClient)) {
+        console.error("prisma is null or not instance of PrismaClient");
+        throw new HTTPException(500, {
+          message: "Internal Server Error ",
+        });
+      }
+      await this.prisma.quiz.deleteMany({
+        where: {
+          creatorId: userId,
+          quizSetId,
         },
       });
     } catch (e) {

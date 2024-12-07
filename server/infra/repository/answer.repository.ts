@@ -131,7 +131,7 @@ export class AnswerRepository extends DBAbstract implements IAnswerRepository {
       });
     }
   }
-  async getAnswersByQuizId(quizId: string): Promise<AnswerEntity[]> {
+  async getAnswerByQuizId(quizId: string): Promise<AnswerEntity | null> {
     try {
       if (!this.prisma || !(this.prisma instanceof PrismaClient)) {
         console.error("prisma is null or not instance of PrismaClient");
@@ -139,7 +139,7 @@ export class AnswerRepository extends DBAbstract implements IAnswerRepository {
           message: "Internal Server Error ",
         });
       }
-      const answers = await this.prisma.answer.findMany({
+      const answers = await this.prisma.answer.findFirst({
         where: {
           questionAnswers: {
             some: {
@@ -150,7 +150,10 @@ export class AnswerRepository extends DBAbstract implements IAnswerRepository {
           },
         },
       });
-      return answers.map(AnswerRepository.toEntity);
+      if (!answers) {
+        return null;
+      }
+      return AnswerRepository.toEntity(answers);
     } catch (e) {
       console.error(e);
       throw new HTTPException(500, {
@@ -198,6 +201,41 @@ export class AnswerRepository extends DBAbstract implements IAnswerRepository {
       await this.prisma.answer.delete({
         where: {
           id,
+        },
+      });
+    } catch (e) {
+      console.error(e);
+      throw new HTTPException(500, {
+        message: "Internal Server Error ",
+      });
+    }
+  }
+  async deleteAnswerByQuizSetIdAndUserId({
+    quizSetId,
+    userId,
+  }: {
+    quizSetId: string;
+    userId: string;
+  }): Promise<void> {
+    try {
+      if (!this.prisma || !(this.prisma instanceof PrismaClient)) {
+        console.error("prisma is null or not instance of PrismaClient");
+        throw new HTTPException(500, {
+          message: "Internal Server Error ",
+        });
+      }
+      await this.prisma.answer.deleteMany({
+        where: {
+          questionAnswers: {
+            some: {
+              question: {
+                quiz: {
+                  creatorId: userId,
+                  quizSetId,
+                },
+              },
+            },
+          },
         },
       });
     } catch (e) {
