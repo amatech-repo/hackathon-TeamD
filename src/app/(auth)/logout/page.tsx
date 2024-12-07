@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React, { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
 // import { logoutUser } from '../../features/auth/logout';
 
 export default function LogoutPage() {
@@ -10,7 +10,7 @@ export default function LogoutPage() {
   useEffect(() => {
     const performLogout = async () => {
       // await logoutUser(); // ログアウト処理を呼び出し
-      router.push('/'); // ホームページへリダイレクト
+      router.push("/"); // ホームページへリダイレクト
     };
 
     performLogout();

@@ -31,6 +31,7 @@ export default function LoginPage() {
             required
           />
         </div>
+        <div></div>
         <button type="submit" className="bg-blue-500 text-white p-2 rounded">
           ログイン
         </button>
