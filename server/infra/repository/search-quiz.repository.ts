@@ -31,8 +31,15 @@ export class SearchQuizRepository
       }
       if (search) {
         whereCondition.OR = [
-          { title: { contains: search } },
-          { description: { contains: search } },
+          {
+            questions: {
+              some: {
+                question: {
+                  contains: search,
+                },
+              },
+            },
+          },
         ];
       }
       if (!level && !search) {

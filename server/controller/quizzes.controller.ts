@@ -34,7 +34,6 @@ quizzesController.post("/", async (c) => {
     c,
     creatorId,
   });
-  console.log(JSON.stringify(quizEntity));
   return c.json(quizEntity);
 });
 
