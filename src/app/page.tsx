@@ -6,6 +6,9 @@ export default function Home() {
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
         <h1>こんな感じで書いていけばいいはず</h1>
         <div>
+          <Link href="/me">マイページ</Link>
+        </div>
+        <div>
           <Link href="/quizzes">クイズページへ</Link>
         </div>
         <div>
