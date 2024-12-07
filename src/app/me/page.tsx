@@ -5,7 +5,6 @@ import UserProfile from "../../components/UserProfile";
 import UserHistory from "../../components/UserHistory";
 import ConfirmationModal from "../../components/ConfirmationModal";
 
-
 export default function MyPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [viewMode, setViewMode] = useState<"sets" | "quizzes">("sets");
@@ -19,7 +18,7 @@ export default function MyPage() {
   return (
     <div className="p-6">
       <h1 className="text-3xl font-bold mb-4">マイページ</h1>
-      
+
       {/* ユーザープロファイル */}
       <UserProfile onDelete={() => setIsModalOpen(true)} />
 

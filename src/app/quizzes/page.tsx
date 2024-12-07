@@ -1,33 +1,33 @@
 "use client";
 
-import React, { useState } from 'react';
-import Quiz from '../../components/quiz';
-import QuizResult from '../../components/quizresult';
+import React, { useState } from "react";
+import Quiz from "../../components/quiz";
+import QuizResult from "../../components/quizresult";
 
 const quizData = [
   {
-    question: 'Reactはライブラリですか？',
+    question: "Reactはライブラリですか？",
     options: [
-      { text: 'はい', isCorrect: true },
-      { text: 'いいえ', isCorrect: false },
+      { text: "はい", isCorrect: true },
+      { text: "いいえ", isCorrect: false },
     ],
   },
   {
-    question: 'JavaScriptのファイル拡張子は？',
+    question: "JavaScriptのファイル拡張子は？",
     options: [
-      { text: '.java', isCorrect: false },
-      { text: '.js', isCorrect: true },
-      { text: '.jsx', isCorrect: false },
-      { text: '.json', isCorrect: false },
+      { text: ".java", isCorrect: false },
+      { text: ".js", isCorrect: true },
+      { text: ".jsx", isCorrect: false },
+      { text: ".json", isCorrect: false },
     ],
   },
   {
-    question: 'HTMLの略は？',
+    question: "HTMLの略は？",
     options: [
-      { text: 'Hyper Text Makeup Language', isCorrect: false },
-      { text: 'Hyper Text Markup Language', isCorrect: true },
-      { text: 'High Text Makeup Language', isCorrect: false },
-      { text: 'Hyper Tool Markup Language', isCorrect: false },
+      { text: "Hyper Text Makeup Language", isCorrect: false },
+      { text: "Hyper Text Markup Language", isCorrect: true },
+      { text: "High Text Makeup Language", isCorrect: false },
+      { text: "Hyper Tool Markup Language", isCorrect: false },
     ],
   },
 ];

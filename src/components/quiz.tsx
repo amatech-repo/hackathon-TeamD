@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-interface QuizProps {
+interface IQuizProps {
   questionData: {
     question: string;
     options: { text: string; isCorrect: boolean }[];
@@ -8,7 +8,7 @@ interface QuizProps {
   onAnswer: (isCorrect: boolean) => void;
 }
 
-export default function Quiz({ questionData, onAnswer }: QuizProps) {
+export default function Quiz({ questionData, onAnswer }: IQuizProps) {
   return (
     <div className="bg-white shadow-md rounded-lg p-6 max-w-lg w-full">
       <h2 className="text-xl font-semibold text-gray-800 mb-6">
