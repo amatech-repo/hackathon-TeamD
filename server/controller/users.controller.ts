@@ -44,6 +44,8 @@ usersController.openapi(userRecipeGetMe, async (c) => {
   return c.json(UserDto.entityToDto(user));
 });
 
+//openapi.はHTTPリクエストに型をつける
+
 usersController.openapi(userRecipeUpdateMe, async (c) => {
   const userId = c.get("user_id");
   if (!userId) {
@@ -117,6 +119,7 @@ usersController.openapi(userRecipeGetById, async (c) => {
   }
   return c.json(user);
 });
+
 
 usersController.get(":id/score", async (c) => {
   const userId = c.req.param("id");

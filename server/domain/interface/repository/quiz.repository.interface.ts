@@ -3,7 +3,7 @@ import { IDbAbstract } from "./db.abstract.interface";
 
 export interface IQuizRepository extends IDbAbstract {
   getQuizById(quizId: string): Promise<QuizEntity>;
-  createQuiz({
+  createQuiz({ 
     quizSetId,
     level,
     creatorId,
