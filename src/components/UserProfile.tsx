@@ -21,7 +21,9 @@ export default function UserProfile({ onDelete }: IUserProfileProps) {
     <div className="bg-white p-6 shadow-md rounded-lg">
       <h2 className="text-xl font-bold mb-4">プロフィール</h2>
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">ユーザー名</label>
+        <label className="block text-sm font-medium text-gray-700">
+          ユーザー名
+        </label>
         <input
           type="text"
           value={username}
@@ -39,7 +41,9 @@ export default function UserProfile({ onDelete }: IUserProfileProps) {
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700">Eメール</label>
+        <label className="block text-sm font-medium text-gray-700">
+          Eメール
+        </label>
         <input
           type="email"
           value="user@example.com"

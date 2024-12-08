@@ -17,15 +17,25 @@ export default function SearchForm({ onSearch }: ISearchFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSearch({ mode, searchQuery, tag: mode === "quiz-set" ? tag : undefined, level });
+    onSearch({
+      mode,
+      searchQuery,
+      tag: mode === "quiz-set" ? tag : undefined,
+      level,
+    });
   };
 
   return (
     <div>
-      <form onSubmit={handleSubmit} className="bg-white p-6 shadow-md rounded-lg">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-6 shadow-md rounded-lg"
+      >
         {/* ワード検索 */}
         <div className="mb-6">
-          <label className="block text-lg font-medium text-gray-700">ワード検索</label>
+          <label className="block text-lg font-medium text-gray-700">
+            ワード検索
+          </label>
           <input
             type="text"
             value={searchQuery}
@@ -40,7 +50,9 @@ export default function SearchForm({ onSearch }: ISearchFormProps) {
           {/* タグ入力 */}
           {mode === "quiz-set" && (
             <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700">タグ</label>
+              <label className="block text-sm font-medium text-gray-700">
+                タグ
+              </label>
               <input
                 type="text"
                 value={tag}
@@ -53,7 +65,9 @@ export default function SearchForm({ onSearch }: ISearchFormProps) {
 
           {/* レベル選択 */}
           <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-700">レベル</label>
+            <label className="block text-sm font-medium text-gray-700">
+              レベル
+            </label>
             <select
               value={level}
               onChange={(e) => setLevel(e.target.value)}
@@ -76,28 +90,6 @@ export default function SearchForm({ onSearch }: ISearchFormProps) {
           検索
         </button>
       </form>
-
-      {/* モード切り替え */}
-      <div className="flex gap-4 mt-6" style={{ marginLeft: "1.5rem" }}>
-        <button
-          type="button"
-          className={`px-4 py-2 rounded ${
-            mode === "quiz" ? "bg-blue-500 text-white" : "bg-gray-200"
-          }`}
-          onClick={() => setMode("quiz")}
-        >
-          クイズ
-        </button>
-        <button
-          type="button"
-          className={`px-4 py-2 rounded ${
-            mode === "quiz-set" ? "bg-blue-500 text-white" : "bg-gray-200"
-          }`}
-          onClick={() => setMode("quiz-set")}
-        >
-          クイズセット
-        </button>
-      </div>
     </div>
   );
 }
