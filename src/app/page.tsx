@@ -2,32 +2,43 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <h1>こんな感じで書いていけばいいはず</h1>
-        <div>
-          <Link href="/me">マイページ</Link>
-        </div>
-        <div>
-          <Link href="/quizzes">クイズページへ</Link>
-        </div>
-        <div>
-          <Link href="/quizzes/1">クイズ1へ</Link>
-        </div>
-        <div>
-          <Link href="/quizzes/2">
-            クイズ2へ(この数字は適当にしているだけで、どんな数字でもマッチングする)
+    <div className="min-h-screen grid grid-rows-[auto_1fr_auto] items-center justify-items-center p-8 sm:p-20 bg-gray-50">
+      <header className="text-center">
+        <h1 className="text-4xl font-bold text-blue-600">Welcome to the App</h1>
+        <p className="text-gray-600 mt-2">Choose a page to get started</p>
+      </header>
+
+      <main className="flex flex-col items-center sm:items-start gap-6 mt-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Link
+            href="/search"
+            className="block px-6 py-3 bg-blue-500 text-white text-center rounded shadow hover:bg-blue-600 transition"
+          >
+            検索
+          </Link>
+          <Link
+            href="/me"
+            className="block px-6 py-3 bg-green-500 text-white text-center rounded shadow hover:bg-green-600 transition"
+          >
+            マイページ
+          </Link>
+          <Link
+            href="/quizsearch"
+            className="block px-6 py-3 bg-purple-500 text-white text-center rounded shadow hover:bg-purple-600 transition"
+          >
+            クイズページへ
+          </Link>
+          <Link
+            href="/login"
+            className="block px-6 py-3 bg-orange-500 text-white text-center rounded shadow hover:bg-orange-600 transition"
+          >
+            ログインページへ
           </Link>
         </div>
-        <div>
-          <Link href="/login">ログインページへ</Link>
-        </div>
-        <div>
-          <Link href="/logout">ログアウトページへ</Link>
-        </div>
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        フッター
+
+      <footer className="text-gray-500 text-sm mt-8">
+        &copy; 2024 Your App Name. All rights reserved.
       </footer>
     </div>
   );
