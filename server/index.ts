@@ -1,3 +1,21 @@
-import { Hono } from "hono";
+import { swaggerUI } from "@hono/swagger-ui";
+import { OpenAPIHono } from "@hono/zod-openapi";
+import { appRouter } from "@server/controller/router";
 
-export default new Hono();
+const serverApp = new OpenAPIHono().basePath("/api");
+serverApp.route("/", appRouter);
+if (process.env.NODE_ENV !== "production") {
+  serverApp.doc("/doc", {
+    info: {
+      title: "An API",
+      version: "v1",
+    },
+    openapi: "3.1.0",
+  });
+
+  // Swagger UIエンドポイント
+  serverApp.get("/ui", swaggerUI({ url: "/api/doc" }));
+}
+serverApp.basePath("/api");
+
+export default serverApp;

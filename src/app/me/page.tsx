@@ -53,6 +53,7 @@ export default function MyPage() {
           onCancel={() => setIsModalOpen(false)}
         />
       )}
+
     </div>
   );
 }

@@ -1,25 +1,27 @@
 "use client";
 
-import React, { useEffect } from "react";
-import { useRouter } from "next/navigation";
-// import { logoutUser } from '../../features/auth/logout';
+import Link from "next/link";
 
 export default function LogoutPage() {
-  const router = useRouter();
-
-  useEffect(() => {
-    const performLogout = async () => {
-      // await logoutUser(); // ログアウト処理を呼び出し
-      router.push("/"); // ホームページへリダイレクト
-    };
-
-    performLogout();
-  }, [router]);
-
+  async function isLogin() {
+    const res = await fetch("/api/auth/status");
+    const json = await res.json();
+    alert(json.isValid);
+  }
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4">
-      <h1 className="text-2xl font-bold">ログアウト中...</h1>
-      <p>しばらくお待ちください。</p>
+    <div>
+      <h1> Logout Page</h1>
+      <div>
+        <Link href="/api/auth/logout">Logout</Link>
+      </div>
+      <div>
+        <button type="button" onClick={isLogin}>
+          Check Login
+        </button>
+      </div>
+      <div>
+        <Link href="/">Index</Link>
+      </div>
     </div>
   );
 }
