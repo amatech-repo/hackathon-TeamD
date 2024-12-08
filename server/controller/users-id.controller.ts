@@ -6,6 +6,7 @@ import { userRecipeGetById } from "./recipe/users-id.recipe";
 
 const usersIdController = new OpenAPIHono();
 
+// 使わない
 // users/:id以下
 
 usersIdController.openapi(userRecipeGetById, async (c) => {

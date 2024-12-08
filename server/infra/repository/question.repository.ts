@@ -72,7 +72,7 @@ export class QuestionRepository
       });
     }
   }
-  async getQuestionById(id: string): Promise<QuestionEntity | null> {
+  async getQuestionById(id: string): Promise<QuestionEntity> {
     try {
       if (!this.prisma || !(this.prisma instanceof PrismaClient)) {
         console.error("prisma is null or not instance of PrismaClient");
@@ -86,7 +86,9 @@ export class QuestionRepository
         },
       });
       if (!question) {
-        return null;
+        throw new HTTPException(404, {
+          message: "Question not found",
+        });
       }
       return QuestionRepository.toEntity(question);
     } catch (e) {
@@ -96,7 +98,7 @@ export class QuestionRepository
       });
     }
   }
-  async getQuestionByQuizId(quizId: string): Promise<QuestionEntity | null> {
+  async getQuestionByQuizId(quizId: string): Promise<QuestionEntity> {
     try {
       if (!this.prisma || !(this.prisma instanceof PrismaClient)) {
         console.error("prisma is null or not instance of PrismaClient");
@@ -110,7 +112,9 @@ export class QuestionRepository
         },
       });
       if (!question) {
-        return null;
+        throw new HTTPException(404, {
+          message: "Question not found",
+        });
       }
       return QuestionRepository.toEntity(question);
     } catch (e) {
