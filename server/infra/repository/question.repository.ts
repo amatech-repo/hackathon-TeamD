@@ -96,7 +96,7 @@ export class QuestionRepository
       });
     }
   }
-  async getQuestionsByQuizId(quizId: string): Promise<QuestionEntity[]> {
+  async getQuestionByQuizId(quizId: string): Promise<QuestionEntity | null> {
     try {
       if (!this.prisma || !(this.prisma instanceof PrismaClient)) {
         console.error("prisma is null or not instance of PrismaClient");
@@ -104,12 +104,15 @@ export class QuestionRepository
           message: "Internal Server Error ",
         });
       }
-      const questions = await this.prisma.question.findMany({
+      const question = await this.prisma.question.findFirst({
         where: {
           quizId,
         },
       });
-      return questions.map(QuestionRepository.toEntity);
+      if (!question) {
+        return null;
+      }
+      return QuestionRepository.toEntity(question);
     } catch (e) {
       console.error(e);
       throw new HTTPException(500, {
@@ -151,6 +154,37 @@ export class QuestionRepository
       await this.prisma.question.delete({
         where: {
           id,
+        },
+      });
+    } catch (e) {
+      console.error(e);
+      throw new HTTPException(500, {
+        message: "Internal Server Error ",
+      });
+    }
+  }
+  async deleteQuestionByIdAndUserId({
+    id,
+    userId,
+  }: {
+    id: string;
+    userId: string;
+  }): Promise<void> {
+    try {
+      if (!this.prisma || !(this.prisma instanceof PrismaClient)) {
+        console.error("prisma is null or not instance of PrismaClient");
+        throw new HTTPException(500, {
+          message: "Internal Server Error ",
+        });
+      }
+      await this.prisma.question.delete({
+        where: {
+          id,
+          quiz: {
+            quizSet: {
+              creatorId: userId,
+            },
+          },
         },
       });
     } catch (e) {

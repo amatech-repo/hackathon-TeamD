@@ -43,4 +43,5 @@ export interface IAnswerOptionRepository extends IDbAbstract {
     isCorrect: boolean;
   }): Promise<AnswerOptionEntity | null>;
   deleteAnswerOptionById(answerOptionId: string): Promise<void>;
+  deleteAnswerOptionByAnserId(answerId: string): Promise<void>;
 }

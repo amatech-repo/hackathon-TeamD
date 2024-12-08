@@ -4,10 +4,8 @@ import { GetUserTopNScoreRankingUseCase } from "@server/usecase/user-score/get-u
 export const rankingController = new OpenAPIHono();
 
 rankingController.get("/", async (c) => {
-  const topN = c.req.query("topN") ?? "1";
-  const num = parseInt(topN) || 1;
   const topNUsersAndScore = await GetUserTopNScoreRankingUseCase({
-    topN: num,
+    topN: 30,
     c,
   });
   console.log("GetUserTopNScoreRankingUseCase:", topNUsersAndScore);

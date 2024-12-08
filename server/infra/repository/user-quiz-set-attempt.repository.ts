@@ -57,6 +57,54 @@ export class UserQuizSetAttemptRepository
       });
     }
   }
+  async upsertIncrement({
+    userId,
+    quizSetId,
+    isCompleted,
+  }: {
+    userId: string;
+    quizSetId: string;
+    isCompleted: boolean;
+  }): Promise<UserQuizSetAttemptEntity> {
+    try {
+      if (!this.prisma || !(this.prisma instanceof PrismaClient)) {
+        console.error("prisma is null or not instance of PrismaClient");
+        throw new HTTPException(500, {
+          message: "Internal Server Error ",
+        });
+      }
+      const userQuizSetAttempt = await this.prisma.userQuizSetAttempt.upsert({
+        where: {
+          userId_quizSetId: {
+            userId,
+            quizSetId,
+          },
+        },
+        update: {
+          lastCorrectQuizzesCount: {
+            increment: isCompleted ? 1 : 0,
+          },
+          lastQuizzesScore: {
+            increment: isCompleted ? 1 : 0,
+          },
+          isCompleted,
+        },
+        create: {
+          userId,
+          quizSetId,
+          lastCorrectQuizzesCount: isCompleted ? 1 : 0,
+          lastQuizzesScore: isCompleted ? 1 : 0,
+          isCompleted,
+        },
+      });
+      return UserQuizSetAttemptRepository.toEntity(userQuizSetAttempt);
+    } catch (e) {
+      console.error(e);
+      throw new HTTPException(500, {
+        message: "Internal Server Error ",
+      });
+    }
+  }
   async getQuizSetAttemptById(
     id: string,
   ): Promise<UserQuizSetAttemptEntity | null> {
@@ -183,6 +231,35 @@ export class UserQuizSetAttemptRepository
       await this.prisma.userQuizSetAttempt.delete({
         where: {
           id,
+        },
+      });
+    } catch (e) {
+      console.error(e);
+      throw new HTTPException(500, {
+        message: "Internal Server Error ",
+      });
+    }
+  }
+  async deleteByUserIdAndQuizSetId({
+    userId,
+    quizSetId,
+  }: {
+    userId: string;
+    quizSetId: string;
+  }): Promise<void> {
+    try {
+      if (!this.prisma || !(this.prisma instanceof PrismaClient)) {
+        console.error("prisma is null or not instance of PrismaClient");
+        throw new HTTPException(500, {
+          message: "Internal Server Error ",
+        });
+      }
+      await this.prisma.userQuizSetAttempt.delete({
+        where: {
+          userId_quizSetId: {
+            userId,
+            quizSetId,
+          },
         },
       });
     } catch (e) {
