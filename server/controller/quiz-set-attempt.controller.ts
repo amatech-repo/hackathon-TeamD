@@ -27,7 +27,7 @@ quizSetAttemptController.get("/users/me", async (c) => {
     c,
     userId,
   });
-  const return_value = await gotQuizAttempts.map(async (quizAttempt) => {
+  const returnValue = await gotQuizAttempts.map(async (quizAttempt) => {
     const title = await GetQuizSetByIdUseCase({
       id: quizAttempt.quizSetId,
       c,
@@ -38,7 +38,7 @@ quizSetAttemptController.get("/users/me", async (c) => {
       title: title.quizSet.title,
     };
   });
-  const value = await Promise.all(return_value);
+  const value = await Promise.all(returnValue);
   return c.json(value);
 });
 
