@@ -1,58 +1,59 @@
 "use client";
 
-import Link from "next/link";
-import { redirect } from "next/navigation";
+import React, { useState } from "react";
+import UserProfile from "../../components/UserProfile";
+import UserHistory from "../../components/UserHistory";
+import ConfirmationModal from "../../components/ConfirmationModal";
 
 export default function MyPage() {
-  async function deleteMe() {
-    const res = await fetch("/api/users/me", {
-      method: "DELETE",
-      redirect: "follow",
-    });
-    if (res.redirected) {
-      redirect(res.url);
-    }
-  }
-  async function aboutMe() {
-    const res = await fetch("/api/users/me", {
-      method: "GET",
-    });
-    const json = await res.json();
-    console.log(json.props);
-    alert(json.props);
-  }
-  async function updateMe() {
-    const res = await fetch("/api/users/me", {
-      method: "PUT",
-      body: JSON.stringify({ name: "new name" }),
-    });
-    const json = await res.json();
-    alert(JSON.stringify(json));
-  }
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<"sets" | "quizzes">("sets");
+
+  const handleDeleteUser = () => {
+    // ユーザー削除処理をここで実装
+    console.log("ユーザー削除");
+    setIsModalOpen(false);
+  };
+
   return (
-    <div>
-      <h1>My Page</h1>
-      <div>
-        <p>My Page</p>
+    <div className="p-6">
+      <h1 className="text-3xl font-bold mb-4">マイページ</h1>
+
+      {/* ユーザープロファイル */}
+      <UserProfile onDelete={() => setIsModalOpen(true)} />
+
+      {/* 履歴表示の切り替え */}
+      <div className="mt-6">
+        <div className="flex gap-4 mb-4">
+          <button
+            className={`px-4 py-2 rounded ${
+              viewMode === "sets" ? "bg-blue-500 text-white" : "bg-gray-200"
+            }`}
+            onClick={() => setViewMode("sets")}
+          >
+            クイズセット
+          </button>
+          <button
+            className={`px-4 py-2 rounded ${
+              viewMode === "quizzes" ? "bg-blue-500 text-white" : "bg-gray-200"
+            }`}
+            onClick={() => setViewMode("quizzes")}
+          >
+            クイズ
+          </button>
+        </div>
+        <UserHistory mode={viewMode} />
       </div>
-      <div>
-        <button type="button" onClick={deleteMe}>
-          Check Delete Me
-        </button>
-      </div>
-      <div>
-        <button type="button" onClick={aboutMe}>
-          Check About Me
-        </button>
-      </div>
-      <div>
-        <button type="button" onClick={updateMe}>
-          Check Update Me
-        </button>
-      </div>
-      <div>
-        <Link href="/">Index</Link>
-      </div>
+
+      {/* ユーザー削除モーダル */}
+      {isModalOpen && (
+        <ConfirmationModal
+          message="本当にユーザーを削除しますか？"
+          onConfirm={handleDeleteUser}
+          onCancel={() => setIsModalOpen(false)}
+        />
+      )}
+
     </div>
   );
 }
