@@ -87,5 +87,5 @@ usersController.get("/me/score", async (c) => {
       message: "User score not found",
     });
   }
-  return c.json(score);
+  return c.json({ score: score.totalCorrect });
 });
