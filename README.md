@@ -31,11 +31,20 @@ TeamD XXXX
 
 ## 注力したポイント
 
-開発したプロダクトの中で、特に注力して作成した箇所・ポイントについて入力してください
+- Honoで良いSessionライブラリがなかったり、SessionIDを使った認証とPrismaを合わせている記事がなかったので面白そうだったので作ってみました
+- hono/oauth-providerでは、Discordでのemail取得ができなかったので拡張してみました
+- Honoで良いアーキテクチャの例が少なかったのでjavascriptチックで、Nestjsっぽい書き方ができるcleanArchitectureを構築してみました
+- アーキテクチャをあまり理解していなくても開発できるようにドキュメントを潤沢にしました
+- フロントエンドとバックエンドを完全に分けて開発できるようにしました
 
 ## 使用技術
 
-使用技術を入力してください
+- Docker
+- Hono
+- Prisma
+- Cloudflare(最終的に動かすための環境にしている)
+- Nextjs
+- Swagger
 
 markdownの記法はこちらを参照してください↓
 https://docs.github.com/ja/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax
